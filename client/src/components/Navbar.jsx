@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth, API_URL } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { Sun, Moon, LogOut, Menu, User as UserIcon, CloudLightning, Bell, LogIn, Chrome } from 'lucide-react';
+import { Sun, Moon, LogOut, Menu, User as UserIcon, Activity, Bell, LogIn, Key } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -10,7 +10,6 @@ export const Navbar = ({ onMenuClick }) => {
   const { darkMode, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
-  // Notification state
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const [hasUnread, setHasUnread] = useState(false);
@@ -27,100 +26,91 @@ export const Navbar = ({ onMenuClick }) => {
         if (response.ok) {
           const data = await response.json();
           setNotifications(data);
-          if (data.length > 0) {
-            setHasUnread(true);
-          }
+          if (data.length > 0) setHasUnread(true);
         }
       } catch (err) {
-        console.error('Failed to load alerts', err);
+        console.error('Failed to load notices', err);
       }
     };
     fetchNotices();
   }, [user]);
 
-  // Mock Google Login
-  const handleGoogleLogin = async () => {
+  // Mock Developer Login helper for quick SaaS evaluations
+  const handleDevLogin = async () => {
     try {
-      // Mock login via the general auth context by logging in with predefined credentials
       await login('admin@arcade.com', 'AdminPass123!');
       navigate('/dashboard');
     } catch (err) {
-      console.error('Google Sign-In failed', err);
+      console.error('Bypass authentication failed', err);
     }
   };
 
-  const handleNotificationClick = () => {
-    setShowNotifications(!showNotifications);
-    setHasUnread(false);
-  };
-
   return (
-    <header className="sticky top-0 z-40 w-full glass-panel border-b shadow-sm transition-all duration-300">
+    <header className="sticky top-0 z-40 w-full bg-white/70 dark:bg-slate-950/60 backdrop-blur-lg border-b border-slate-200/80 dark:border-slate-900/80 transition-colors duration-300">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6">
         
-        {/* Left Side: Hamburger & Logo */}
+        {/* Left Side: Brand Logo */}
         <div className="flex items-center gap-3">
           {user && (
             <button
               onClick={onMenuClick}
-              className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden transition-colors"
-              aria-label="Toggle Navigation Menu"
+              className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900 lg:hidden transition-colors"
+              aria-label="Toggle Side Panel"
             >
-              <Menu className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+              <Menu className="w-5 h-5 text-slate-600 dark:text-slate-350" />
             </button>
           )}
           <Link to="/" className="flex items-center gap-2 font-semibold">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-google text-white shadow-sm">
-              <CloudLightning className="w-4 h-4" />
+            <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-brand text-white shadow-md">
+              <Activity className="w-4.5 h-4.5" />
             </div>
-            <span className="text-lg tracking-tight font-extrabold text-slate-800 dark:text-slate-100">
-              Points<span className="text-google-blue">Calculator</span>
+            <span className="text-base tracking-tight font-extrabold text-slate-800 dark:text-white">
+              CloudArc<span className="text-indigo-600 dark:text-indigo-400">Pro</span>
             </span>
           </Link>
         </div>
 
-        {/* Right Side: Navigation actions */}
+        {/* Right Side: Quick Action Row */}
         <div className="flex items-center gap-3">
-          {/* Public links when guest */}
+          
           {!user && (
-            <div className="hidden md:flex items-center gap-4 text-xs font-bold text-slate-600 dark:text-slate-355 mr-2">
-              <Link to="/" className="hover:text-google-blue">Home</Link>
-              <Link to="/leaderboard" className="hover:text-google-blue">Leaderboard</Link>
-              <Link to="/resources" className="hover:text-google-blue">Resources</Link>
+            <div className="hidden md:flex items-center gap-5 text-xs font-bold text-slate-500 dark:text-slate-400 mr-2">
+              <Link to="/" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Home</Link>
+              <Link to="/leaderboard" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Leaderboard</Link>
+              <Link to="/resources" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Resources</Link>
             </div>
           )}
 
-          {/* Theme Toggle */}
+          {/* Light/Dark Toggle */}
           <button
             onClick={toggleTheme}
-            className="p-2.5 rounded-xl bg-slate-105 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-all duration-300"
-            aria-label="Toggle Theme"
+            className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 hover:bg-slate-200/80 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-all duration-300"
+            aria-label="Toggle Theme Mode"
           >
-            {darkMode ? <Sun className="w-4 h-4 text-google-yellow" /> : <Moon className="w-4 h-4 text-slate-700" />}
+            {darkMode ? <Sun className="w-4 h-4 text-amber-500" /> : <Moon className="w-4 h-4 text-indigo-600" />}
           </button>
 
-          {/* Notifications Drawer */}
+          {/* Notifications alerts popup */}
           {user && (
             <div className="relative">
               <button
-                onClick={handleNotificationClick}
-                className="p-2.5 rounded-xl bg-slate-105 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-all duration-300"
-                aria-label="View Notifications"
+                onClick={() => { setShowNotifications(!showNotifications); setHasUnread(false); }}
+                className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 hover:bg-slate-200/80 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-all duration-300"
+                aria-label="Alert Messages"
               >
                 <Bell className="w-4 h-4" />
                 {hasUnread && (
-                  <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-google-red ring-2 ring-white dark:ring-slate-900 animate-ping" />
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white dark:ring-slate-950 animate-pulse" />
                 )}
               </button>
 
-              {/* Notifications Dropdown */}
               <AnimatePresence>
                 {showNotifications && (
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
-                    className="absolute right-0 mt-3 w-80 max-h-96 overflow-y-auto glass-card p-4 shadow-xl z-50 border border-slate-200 dark:border-slate-800"
+                    className="absolute right-0 mt-3 w-80 max-h-96 overflow-y-auto glass-card p-4 shadow-xl z-50 border border-slate-200/80 dark:border-slate-800/80"
                   >
                     <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200 mb-3 pb-2 border-b border-slate-100 dark:border-slate-800">
                       System Notifications
@@ -128,17 +118,17 @@ export const Navbar = ({ onMenuClick }) => {
                     {notifications.length > 0 ? (
                       <div className="space-y-3">
                         {notifications.map((n) => (
-                          <div key={n._id} className="text-xs pb-2 border-b border-slate-100 dark:border-slate-900 last:border-0">
-                            <h5 className="font-bold text-slate-700 dark:text-slate-300">{n.title}</h5>
-                            <p className="text-slate-500 dark:text-slate-400 mt-1 leading-normal">{n.content}</p>
-                            <span className="text-[9px] text-slate-400 block mt-1">
+                          <div key={n._id} className="text-[11px] pb-2 border-b border-slate-100 dark:border-slate-900 last:border-0">
+                            <h5 className="font-bold text-slate-850 dark:text-slate-200">{n.title}</h5>
+                            <p className="text-slate-500 dark:text-slate-400 mt-0.5 leading-normal">{n.content}</p>
+                            <span className="text-[8px] text-slate-400 block mt-1">
                               {new Date(n.createdAt).toLocaleDateString()}
                             </span>
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <p className="text-center text-slate-400 text-xs py-4">No active notices.</p>
+                      <p className="text-center text-slate-400 text-xs py-4 font-semibold">No active notices.</p>
                     )}
                   </motion.div>
                 )}
@@ -146,50 +136,46 @@ export const Navbar = ({ onMenuClick }) => {
             </div>
           )}
 
-          {/* User profile / Login widgets */}
+          {/* User Sign-In Controls */}
           {user ? (
-            <div className="flex items-center gap-3 pl-3 border-l border-slate-200 dark:border-slate-800">
+            <div className="flex items-center gap-3 pl-3 border-l border-slate-200 dark:border-slate-850">
               <div className="hidden md:block text-right">
-                <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate max-w-[100px]">
+                <p className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate max-w-[100px]">
                   {user.name}
                 </p>
-                <p className="text-[10px] font-medium text-slate-400 capitalize">
+                <p className="text-[9px] font-semibold text-slate-400 capitalize">
                   {user.role} Account
                 </p>
               </div>
 
-              {/* Avatar Icon */}
-              <div className="flex items-center justify-center w-9 h-9 rounded-full bg-google-blue/10 dark:bg-google-blue/20 text-google-blue border border-google-blue/20">
+              <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-indigo-500/10 dark:bg-indigo-500/20 text-indigo-500 border border-indigo-500/20">
                 <UserIcon className="w-4 h-4" />
               </div>
 
-              {/* Logout Button */}
               <button
                 onClick={logout}
-                className="p-2.5 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/20 text-slate-500 hover:text-rose-500 dark:text-slate-400 dark:hover:text-rose-400 transition-all duration-300"
-                title="Log Out"
+                className="p-2.5 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/20 text-slate-500 hover:text-rose-500 dark:text-slate-400 dark:hover:text-rose-450 transition-all duration-300"
+                title="Sign Out"
               >
                 <LogOut className="w-4 h-4" />
               </button>
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              {/* Standard Email Login redirection */}
               <Link
                 to="/login"
-                className="hidden sm:flex items-center gap-1.5 px-4 py-2 border border-slate-250 dark:border-slate-750 text-slate-650 dark:text-slate-300 font-bold text-xs rounded-xl hover:bg-slate-100 dark:hover:bg-slate-900 transition-all"
+                className="hidden sm:flex items-center gap-1.5 px-4 py-2 border border-slate-200 dark:border-slate-800 text-slate-650 dark:text-slate-350 font-bold text-xs rounded-xl hover:bg-slate-100 dark:hover:bg-slate-900 transition-all"
               >
                 <LogIn className="w-3.5 h-3.5" />
                 Sign In
               </Link>
 
-              {/* Mock Google OAuth Sign In */}
               <button
-                onClick={handleGoogleLogin}
-                className="flex items-center gap-1.5 px-4 py-2 bg-google-blue text-white font-bold text-xs rounded-xl hover:bg-blue-600 shadow-sm transition-all"
+                onClick={handleDevLogin}
+                className="flex items-center gap-1.5 px-4 py-2 bg-gradient-brand text-white font-bold text-xs rounded-xl hover:opacity-90 shadow-md transition-all"
               >
-                <Chrome className="w-3.5 h-3.5" />
-                <span>Google Sign-In</span>
+                <Key className="w-3.5 h-3.5" />
+                <span>Dev Access</span>
               </button>
             </div>
           )}

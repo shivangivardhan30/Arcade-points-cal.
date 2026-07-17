@@ -9,10 +9,11 @@ import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Home } from './pages/Home';
 import { Dashboard } from './pages/Dashboard';
-import { Calculator } from './pages/Calculator';
-import { History } from './pages/History';
+import { Milestones } from './pages/Milestones';
 import { Leaderboard } from './pages/Leaderboard';
+import { Analytics } from './pages/Analytics';
 import { Resources } from './pages/Resources';
+import { Settings } from './pages/Settings';
 import { AdminPanel } from './pages/AdminPanel';
 
 // Route guard for authenticated users
@@ -23,7 +24,7 @@ const PrivateRoute = ({ children }) => {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-slate-50 dark:bg-slate-950">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 border-4 border-google-blue border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
           <p className="text-xs font-semibold text-slate-500">Checking authorization sessions...</p>
         </div>
       </div>
@@ -40,7 +41,7 @@ const AdminRoute = ({ children }) => {
   if (loading) {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-slate-50 dark:bg-slate-950">
-        <div className="w-8 h-8 border-4 border-google-blue border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-indigo-550 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -55,7 +56,7 @@ const AuthRoute = ({ children }) => {
   if (loading) {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-slate-50 dark:bg-slate-950">
-        <div className="w-8 h-8 border-4 border-google-blue border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-indigo-550 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -83,8 +84,9 @@ const DashboardLayout = () => {
 
             {/* Private Guarded Pages */}
             <Route path="dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-            <Route path="calculator" element={<PrivateRoute><Calculator /></PrivateRoute>} />
-            <Route path="history" element={<PrivateRoute><History /></PrivateRoute>} />
+            <Route path="milestones" element={<PrivateRoute><Milestones /></PrivateRoute>} />
+            <Route path="analytics" element={<PrivateRoute><Analytics /></PrivateRoute>} />
+            <Route path="settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
             <Route path="admin" element={<PrivateRoute><AdminRoute><AdminPanel /></AdminRoute></PrivateRoute>} />
             
             {/* Fallback */}

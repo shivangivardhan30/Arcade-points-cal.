@@ -15,7 +15,7 @@
   }
 }
 
-/* Custom Scrollbar */
+/* Custom Webkit Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -24,38 +24,46 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-300 dark:bg-slate-800 rounded-full;
+  @apply bg-slate-300 dark:bg-slate-800 rounded-full transition-colors;
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-slate-400 dark:bg-slate-700;
+  @apply bg-indigo-400 dark:bg-indigo-700;
 }
 
-/* Premium Glassmorphism classes */
+/* Glassmorphism panels & cards */
 .glass-panel {
-  @apply bg-white/70 dark:bg-slate-900/60 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80;
+  @apply bg-white/70 dark:bg-slate-900/60 backdrop-blur-lg border-b border-slate-200/80 dark:border-slate-800/80;
 }
 
 .glass-card {
-  @apply bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/50 dark:border-slate-800/50 shadow-sm rounded-2xl;
+  @apply bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/60 dark:border-slate-800/50 shadow-sm rounded-2xl;
 }
 
-/* Custom animated gradient backgrounds */
-.bg-gradient-google {
-  background: linear-gradient(135deg, #4285F4 0%, #34A853 33%, #FBBC05 66%, #EA4335 100%);
+.glass-card-hover {
+  @apply hover:bg-white/90 dark:hover:bg-slate-900/90 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 border border-slate-200/60 dark:border-slate-800/50;
 }
 
-.text-gradient-google {
-  background: linear-gradient(135deg, #4285F4 0%, #34A853 50%, #EA4335 100%);
+/* CloudArc Brand Gradient utilities */
+.bg-gradient-brand {
+  background: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #a855f7 100%);
+}
+
+.text-gradient-brand {
+  background: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #a855f7 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* Form inputs styling */
-.google-input {
-  @apply w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-google-blue focus:border-transparent transition-all;
+/* Input Fields styling */
+.brand-input {
+  @apply w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all text-xs font-semibold;
 }
 
-/* Milestones and Cards Hover animations */
+.glass-input {
+  @apply w-full px-4 py-3 bg-white/40 dark:bg-slate-900/40 border border-slate-200/50 dark:border-slate-800/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all backdrop-blur-sm text-xs font-semibold;
+}
+
+/* Card hover scaling lift */
 .hover-lift {
   @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-md;
 }
@@ -85,9 +93,3 @@
 .animate-blob-3 {
   animation: float-slow 18s infinite ease-in-out;
 }
-
-/* Glassmorphism premium forms */
-.glass-input {
-  @apply w-full px-4 py-3 bg-white/40 dark:bg-slate-900/40 border border-slate-200/50 dark:border-slate-800/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-google-blue focus:border-transparent transition-all backdrop-blur-sm;
-}
-

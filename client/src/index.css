@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,7 +7,7 @@
 @layer base {
   body {
     font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
-    @apply bg-slate-50 text-slate-900 transition-colors duration-300;
+    @apply bg-slate-50 text-slate-900 transition-colors duration-300 antialiased selection:bg-indigo-500 selection:text-white;
   }
 
   body.dark {
@@ -15,7 +15,7 @@
   }
 }
 
-/* Custom Webkit Scrollbars */
+/* Premium Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -24,28 +24,63 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-300 dark:bg-slate-800 rounded-full transition-colors;
+  @apply bg-slate-200 dark:bg-slate-900 rounded-full transition-all;
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-indigo-400 dark:bg-indigo-700;
+  @apply bg-indigo-500 dark:bg-indigo-850;
 }
 
-/* Glassmorphism panels & cards */
+/* Grid & Mesh Overlays */
+.bg-mesh-grid {
+  background-size: 30px 30px;
+  background-image: 
+    linear-gradient(to right, rgba(99, 102, 241, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(99, 102, 241, 0.04) 1px, transparent 1px);
+}
+
+.dark .bg-mesh-grid {
+  background-image: 
+    linear-gradient(to right, rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+}
+
+/* Glassmorphism components */
 .glass-panel {
-  @apply bg-white/70 dark:bg-slate-900/60 backdrop-blur-lg border-b border-slate-200/80 dark:border-slate-800/80;
+  @apply bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-900/50;
 }
 
 .glass-card {
-  @apply bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/60 dark:border-slate-800/50 shadow-sm rounded-2xl;
+  @apply bg-white/70 dark:bg-slate-900/40 backdrop-blur-md border border-slate-200/60 dark:border-slate-800/60 shadow-sm rounded-2xl transition-all duration-300;
 }
 
-.glass-card-hover {
-  @apply hover:bg-white/90 dark:hover:bg-slate-900/90 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 border border-slate-200/60 dark:border-slate-800/50;
+/* Custom premium hover actions */
+.hover-lift {
+  @apply hover:-translate-y-1 hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700/80 transition-all duration-300;
 }
 
-/* CloudArc Brand Gradient utilities */
+.glow-card {
+  position: relative;
+}
+.glow-card::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(168, 85, 247, 0.15) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.glow-card:hover::after {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.35) 0%, rgba(168, 85, 247, 0.35) 100%);
+}
+
+/* Brand linear colors */
 .bg-gradient-brand {
-  background: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #a855f7 100%);
+  background: linear-gradient(135deg, #2563eb 0%, #6366f1 50%, #8b5cf6 100%);
 }
 
 .text-gradient-brand {
@@ -54,42 +89,47 @@
   -webkit-text-fill-color: transparent;
 }
 
-/* Input Fields styling */
+/* Form controls */
 .brand-input {
-  @apply w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all text-xs font-semibold;
+  @apply w-full px-4 py-3 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all text-xs font-semibold shadow-sm;
 }
 
 .glass-input {
-  @apply w-full px-4 py-3 bg-white/40 dark:bg-slate-900/40 border border-slate-200/50 dark:border-slate-800/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all backdrop-blur-sm text-xs font-semibold;
+  @apply w-full px-4 py-3 bg-white/40 dark:bg-slate-900/20 border border-slate-250/50 dark:border-slate-850/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-550 focus:border-transparent transition-all backdrop-blur-sm text-xs font-semibold;
 }
 
-/* Card hover scaling lift */
-.hover-lift {
-  @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-md;
-}
-
-/* Animated floating background blobs */
+/* Floating animation blobs */
 @keyframes float-slow {
   0% { transform: translate(0px, 0px) scale(1); }
-  33% { transform: translate(30px, -50px) scale(1.1); }
-  66% { transform: translate(-20px, 20px) scale(0.95); }
+  33% { transform: translate(35px, -60px) scale(1.15); }
+  66% { transform: translate(-25px, 25px) scale(0.9); }
   100% { transform: translate(0px, 0px) scale(1); }
 }
 
 @keyframes float-medium {
   0% { transform: translate(0px, 0px) scale(1); }
-  50% { transform: translate(-40px, 30px) scale(1.05); }
+  50% { transform: translate(-45px, 35px) scale(1.08); }
   100% { transform: translate(0px, 0px) scale(1); }
 }
 
 .animate-blob-1 {
-  animation: float-slow 20s infinite ease-in-out;
+  animation: float-slow 22s infinite ease-in-out;
 }
 
 .animate-blob-2 {
-  animation: float-medium 25s infinite ease-in-out;
+  animation: float-medium 28s infinite ease-in-out;
 }
 
 .animate-blob-3 {
-  animation: float-slow 18s infinite ease-in-out;
+  animation: float-slow 19s infinite ease-in-out;
+}
+
+/* Custom premium pulse buttons */
+.btn-glow {
+  position: relative;
+  transition: all 0.3s ease;
+}
+.btn-glow:hover {
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+  transform: translateY(-0.5px);
 }

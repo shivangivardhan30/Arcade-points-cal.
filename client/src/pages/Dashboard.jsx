@@ -16,10 +16,10 @@ export const Dashboard = () => {
   };
 
   const stats = [
-    { label: 'Arcade Points', value: '42', subtitle: 'Estimated credits', Icon: Award, color: 'text-indigo-500 bg-indigo-500/10 border-indigo-500/20 dark:bg-indigo-550/5' },
-    { label: 'Labs Completed', value: '18', subtitle: 'Hands-on practice', Icon: Activity, color: 'text-blue-500 bg-blue-500/10 border-blue-500/20 dark:bg-blue-550/5' },
-    { label: 'Skill Badges', value: '12', subtitle: 'Credential verifications', Icon: Shield, color: 'text-purple-500 bg-purple-500/10 border-purple-500/20 dark:bg-purple-550/5' },
-    { label: 'Courses Completed', value: '8', subtitle: 'Learning tracks', Icon: BookOpen, color: 'text-pink-500 bg-pink-500/10 border-pink-500/20 dark:bg-pink-550/5' }
+    { label: 'Arcade Points', value: '42', subtitle: 'Estimated credits', Icon: Award, color: 'text-indigo-500 bg-indigo-500/10 border-indigo-500/20 dark:bg-indigo-500/5' },
+    { label: 'Labs Completed', value: '18', subtitle: 'Hands-on practice', Icon: Activity, color: 'text-blue-500 bg-blue-500/10 border-blue-500/20 dark:bg-blue-500/5' },
+    { label: 'Skill Badges', value: '12', subtitle: 'Credential verifications', Icon: Shield, color: 'text-purple-500 bg-purple-500/10 border-purple-500/20 dark:bg-purple-500/5' },
+    { label: 'Courses Completed', value: '8', subtitle: 'Learning tracks', Icon: BookOpen, color: 'text-pink-500 bg-pink-500/10 border-pink-500/20 dark:bg-pink-500/5' }
   ];
 
   const recentActivities = [
@@ -73,7 +73,7 @@ export const Dashboard = () => {
               <span className="text-[9px] font-extrabold uppercase tracking-wider bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 px-3 py-1 rounded-full border border-indigo-500/10">
                 {profile.role}
               </span>
-              <h2 className="text-lg font-extrabold text-slate-805 dark:text-white mt-2">{profile.name}</h2>
+              <h2 className="text-lg font-extrabold text-slate-800 dark:text-white mt-2">{profile.name}</h2>
               <p className="text-[10px] text-slate-400 font-semibold">User ID: {profile.email} • Member since {profile.memberSince}</p>
             </div>
           </div>

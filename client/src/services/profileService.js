@@ -3,14 +3,14 @@ import { formatUserFriendlyError } from '../utils/validation';
 const API_BASE_URL = 'http://localhost:5000/api';
 
 /**
- * Service to fetch and parse profile data from backend API
+ * Fetches profile data from backend API
  * @param {string} profileUrl 
  * @returns {Promise<Object>}
  */
 export const fetchProfileData = async (profileUrl) => {
   const trimmedUrl = profileUrl.trim();
 
-  // If testing offline or mock keyword used
+  // Support mock keyword explicitly for testing/offline evaluation
   if (
     trimmedUrl.toLowerCase() === 'mock' ||
     trimmedUrl.toLowerCase() === 'test' ||
@@ -18,14 +18,14 @@ export const fetchProfileData = async (profileUrl) => {
   ) {
     return {
       success: true,
-      name: 'Google Cloud Champion (Demo)',
+      name: 'Google Cloud Champion (Demo Profile)',
       avatar: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
       memberSince: 'Member since 2024',
       profileUrl: 'https://www.cloudskillsboost.google/public_profiles/mock-demo-id',
       skillBadgesCount: 8,
       gameBadgesCount: 4,
-      triviaBadgesCount: 3,
-      questsCount: 6,
+      triviaBadgesCount: 2,
+      labsCount: 5,
       badges: [
         { title: 'Google Cloud Essentials', category: 'Quest', type: 'lab', earned: true },
         { title: 'Create and Manage Cloud Resources', category: 'Skill Badge', type: 'badge', earned: true },
@@ -38,9 +38,7 @@ export const fetchProfileData = async (profileUrl) => {
         { title: 'Deploy and Manage Cloud Applications', category: 'Skill Badge', type: 'badge', earned: true },
         { title: 'Kubernetes in Google Cloud', category: 'Quest', type: 'lab', earned: true },
         { title: 'Engineer Data in Google Cloud', category: 'Skill Badge', type: 'badge', earned: true },
-        { title: 'Set Up an App Dev Environment on GCP', category: 'Skill Badge', type: 'badge', earned: true },
-        { title: 'Level 2: Data & Machine Learning Game', category: 'Game Badge', type: 'badge', earned: false },
-        { title: 'Monitor and Manage Google Cloud Resources', category: 'Skill Badge', type: 'badge', earned: false }
+        { title: 'Set Up an App Dev Environment on GCP', category: 'Skill Badge', type: 'badge', earned: true }
       ]
     };
   }
@@ -58,7 +56,12 @@ export const fetchProfileData = async (profileUrl) => {
       throw new Error(data.message || `HTTP ${response.status}`);
     }
 
+    if (!data || data.success === false) {
+      throw new Error('Unable to retrieve profile data. Please make sure your Google Skills Boost profile is public and try again.');
+    }
+
     return data;
+
   } catch (err) {
     const userFriendlyMessage = formatUserFriendlyError(err);
     throw new Error(userFriendlyMessage);

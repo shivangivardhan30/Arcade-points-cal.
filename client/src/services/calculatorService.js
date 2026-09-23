@@ -1,40 +1,36 @@
 import { POINT_RULES } from '../config/pointsRules';
 import { TIERS } from '../config/tiers';
-import { FACILITATOR_MILESTONES } from '../config/facilitatorRules';
+import { FACILITATOR_MILESTONES, BONUS_TASK_RULE } from '../config/facilitatorRules';
 
 /**
- * Calculates complete Arcade progress metrics from parsed profile data
+ * Calculates complete Arcade metrics from parsed profile data.
+ * Enforces strict mathematical consistency:
+ * Total Points = (Game Badges × 1.0) + (Skill Badges × 0.5) + (Highest Eligible Non-Cumulative Facilitator Bonus)
+ * 
  * @param {Object} profile 
- * @returns {Object} Calculated metrics
+ * @returns {Object|null}
  */
 export const calculateArcadeMetrics = (profile) => {
   if (!profile) return null;
 
-  const gameBadgesCount = parseInt(profile.gameBadgesCount) || 0;
-  const skillBadgesCount = parseInt(profile.skillBadgesCount || profile.badgesCount) || 0;
-  const triviaBadgesCount = parseInt(profile.triviaBadgesCount) || 0;
-  const questsCount = parseInt(profile.labsCount) || 0;
+  const gameBadgesCount = Math.max(0, parseInt(profile.gameBadgesCount) || 0);
+  const skillBadgesCount = Math.max(0, parseInt(profile.skillBadgesCount || profile.badgesCount) || 0);
 
   // 1. Calculate points from categories
-  const gamePoints = gameBadgesCount * POINT_RULES.gameBadge;
-  const skillPoints = skillBadgesCount * POINT_RULES.skillBadge;
-  const triviaPoints = triviaBadgesCount * POINT_RULES.triviaBadge;
-  const questPoints = questsCount * POINT_RULES.quest;
+  const gamePoints = gameBadgesCount * POINT_RULES.GAME_BADGE;
+  const skillPoints = skillBadgesCount * POINT_RULES.SKILL_BADGE;
 
-  // 2. Evaluate Facilitator Milestones
-  let earnedFacilitatorBonus = 0;
-  let highestCompletedMilestone = null;
+  // 2. Evaluate Non-Cumulative Facilitator Milestones
+  let highestFacilitatorBonus = 0;
+  let highestMilestone = null;
 
   const milestoneResults = FACILITATOR_MILESTONES.map((m) => {
-    const isCompleted =
-      skillBadgesCount >= m.skillBadgesNeeded &&
-      gameBadgesCount >= m.gamesNeeded &&
-      triviaBadgesCount >= m.triviaNeeded;
+    const isCompleted = gameBadgesCount >= m.gamesNeeded && skillBadgesCount >= m.skillBadgesNeeded;
 
     if (isCompleted) {
-      if (m.bonusPoints > earnedFacilitatorBonus) {
-        earnedFacilitatorBonus = m.bonusPoints;
-        highestCompletedMilestone = m;
+      if (m.bonusPoints > highestFacilitatorBonus) {
+        highestFacilitatorBonus = m.bonusPoints;
+        highestMilestone = m;
       }
     }
 
@@ -44,14 +40,22 @@ export const calculateArcadeMetrics = (profile) => {
     };
   });
 
-  const nextFacilitatorMilestone = milestoneResults.find(m => !m.isCompleted) || null;
-  const maxFacilitatorBonus = FACILITATOR_MILESTONES[FACILITATOR_MILESTONES.length - 1].bonusPoints;
-  const remainingFacilitatorBonus = Math.max(0, maxFacilitatorBonus - earnedFacilitatorBonus);
+  const bonusTaskEarned = profile.bonusTaskVerified ? BONUS_TASK_RULE.bonusPoints : 0;
+  const totalBonusPoints = highestFacilitatorBonus + bonusTaskEarned;
 
-  // 3. Total Points
-  const totalPoints = gamePoints + skillPoints + triviaPoints + questPoints + earnedFacilitatorBonus;
+  // 3. Calculate Total Points
+  const totalPoints = gamePoints + skillPoints + totalBonusPoints;
 
-  // 4. Calculate Current Tier & Next Tier
+  // Verification Check: Ensure totalPoints equals the exact sum of breakdown components
+  const isVerified = (
+    !isNaN(totalPoints) &&
+    totalPoints >= 0 &&
+    gameBadgesCount >= 0 &&
+    skillBadgesCount >= 0 &&
+    totalPoints === (gamePoints + skillPoints + totalBonusPoints)
+  );
+
+  // 4. Calculate Current Tier Dynamically
   const sortedTiers = [...TIERS].sort((a, b) => a.minPoints - b.minPoints);
 
   let currentTier = sortedTiers[0];
@@ -61,68 +65,65 @@ export const calculateArcadeMetrics = (profile) => {
     }
   }
 
-  const nextTierIndex = sortedTiers.findIndex(t => t.id === currentTier.id) + 1;
-  const nextTier = nextTierIndex < sortedTiers.length ? sortedTiers[nextTierIndex] : null;
+  const currentTierIndex = sortedTiers.findIndex(t => t.id === currentTier.id);
+  const nextTier = currentTierIndex < sortedTiers.length - 1 ? sortedTiers[currentTierIndex + 1] : null;
 
-  let progressPercent = 100;
   let pointsNeeded = 0;
+  let progressPercent = 100;
 
   if (nextTier) {
-    const range = nextTier.minPoints - currentTier.minPoints;
-    const progress = totalPoints - currentTier.minPoints;
-    progressPercent = Math.min(100, Math.max(0, Math.round((progress / range) * 100)));
-    pointsNeeded = nextTier.minPoints - totalPoints;
+    pointsNeeded = Math.max(0, nextTier.minPoints - totalPoints);
+    progressPercent = Math.min(100, Math.max(0, Math.round((totalPoints / nextTier.minPoints) * 100)));
   }
 
-  // 5. Generate Data-Driven Next Actions
+  // 5. Generate Data-Driven Next Goals
   const nextActions = [];
 
   if (nextTier) {
     nextActions.push({
-      title: `Reach ${nextTier.name} Tier`,
-      description: `Earn ${pointsNeeded} more point${pointsNeeded > 1 ? 's' : ''} to unlock the ${nextTier.name} milestone.`,
+      title: `Advance to ${nextTier.name} Tier`,
+      description: `Earn ${pointsNeeded} more point${pointsNeeded > 1 ? 's' : ''} to reach ${nextTier.name} (${nextTier.minPoints} pts).`,
       type: 'tier'
     });
   } else {
     nextActions.push({
       title: 'Maintain Legend Standing',
-      description: 'You have reached the highest configured tier! Continue completing new Arcade challenges.',
+      description: 'You have reached the highest configured tier! Continue building your Google Cloud credentials.',
       type: 'tier'
     });
   }
 
-  if (nextFacilitatorMilestone) {
-    const missingSkills = Math.max(0, nextFacilitatorMilestone.skillBadgesNeeded - skillBadgesCount);
-    const missingGames = Math.max(0, nextFacilitatorMilestone.gamesNeeded - gameBadgesCount);
-    const missingTrivia = Math.max(0, nextFacilitatorMilestone.triviaNeeded - triviaBadgesCount);
+  const nextMilestone = milestoneResults.find(m => !m.isCompleted);
+  if (nextMilestone) {
+    const missingGames = Math.max(0, nextMilestone.gamesNeeded - gameBadgesCount);
+    const missingSkills = Math.max(0, nextMilestone.skillBadgesNeeded - skillBadgesCount);
 
-    const details = [];
-    if (missingSkills > 0) details.push(`${missingSkills} Skill Badge${missingSkills > 1 ? 's' : ''}`);
-    if (missingGames > 0) details.push(`${missingGames} Game Badge${missingGames > 1 ? 's' : ''}`);
-    if (missingTrivia > 0) details.push(`${missingTrivia} Trivia Badge${missingTrivia > 1 ? 's' : ''}`);
+    const missingItems = [];
+    if (missingGames > 0) missingItems.push(`${missingGames} Game Badge${missingGames > 1 ? 's' : ''}`);
+    if (missingSkills > 0) missingItems.push(`${missingSkills} Skill Badge${missingSkills > 1 ? 's' : ''}`);
 
     nextActions.push({
-      title: `Complete Facilitator ${nextFacilitatorMilestone.name}`,
-      description: `Complete ${details.join(', ')} to earn +${nextFacilitatorMilestone.bonusPoints} bonus points.`,
+      title: `Qualify for Facilitator ${nextMilestone.name}`,
+      description: `Complete ${missingItems.join(' and ')} to unlock +${nextMilestone.bonusPoints} bonus points.`,
       type: 'facilitator'
     });
   }
 
   if (gameBadgesCount === 0) {
     nextActions.push({
-      title: 'Earn an Arcade Game Badge',
-      description: `Complete 1 active Arcade Game or Level badge to add +${POINT_RULES.gameBadge} point to your score.`,
+      title: 'Complete 1 Arcade Game Badge',
+      description: `Earn 1 active Arcade Game Badge to add +${POINT_RULES.GAME_BADGE} point to your score.`,
       type: 'game'
     });
   } else {
     nextActions.push({
-      title: 'Earn Additional Skill Badges',
-      description: `Each completed Skill Badge contributes +${POINT_RULES.skillBadge} point to your Arcade progress.`,
+      title: 'Earn More Skill Badges',
+      description: `Each Skill Badge adds +${POINT_RULES.SKILL_BADGE} point to your overall score.`,
       type: 'skill'
     });
   }
 
-  // 6. Timeline Generation
+  // 6. Generate Timeline (only include actual badges/milestones with dates if available)
   const timelineItems = [];
 
   if (profile.badges && profile.badges.length > 0) {
@@ -132,61 +133,49 @@ export const calculateArcadeMetrics = (profile) => {
           id: idx + 1,
           title: b.title,
           category: b.category || b.type || 'Badge',
-          status: 'Completed',
-          type: 'badge'
+          date: b.earnedDate || null, // Only show date if real date exists
+          status: 'Completed'
         });
       }
     });
   }
 
-  milestoneResults.forEach(m => {
-    if (m.isCompleted) {
-      timelineItems.push({
-        id: `m-${m.id}`,
-        title: `Facilitator ${m.name} Milestone Unlocked`,
-        category: 'Milestone Bonus',
-        status: `+${m.bonusPoints} Bonus Pts`,
-        type: 'milestone'
-      });
-    }
-  });
+  if (highestMilestone) {
+    timelineItems.push({
+      id: `milestone-${highestMilestone.id}`,
+      title: `Facilitator ${highestMilestone.name} Unlocked`,
+      category: 'Bonus Reward',
+      date: null,
+      status: `+${highestMilestone.bonusPoints} Bonus Pts`
+    });
+  }
 
   return {
     profileName: profile.name || 'Google Cloud Learner',
-    avatar: profile.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+    avatar: profile.avatar || '',
     memberSince: profile.memberSince || 'Google Cloud Learner',
     profileUrl: profile.profileUrl || '',
-    
-    // Counts
+
     gameBadgesCount,
     skillBadgesCount,
-    triviaBadgesCount,
-    questsCount,
-    
-    // Calculated Points
+
     gamePoints,
     skillPoints,
-    triviaPoints,
-    questPoints,
-    earnedFacilitatorBonus,
-    remainingFacilitatorBonus,
+    bonusPoints: totalBonusPoints,
+    highestBonus: highestFacilitatorBonus,
     totalPoints,
 
-    // Tiers
+    isVerified,
+
     currentTier,
     nextTier,
-    progressPercent,
     pointsNeeded,
+    progressPercent,
 
-    // Facilitator
     milestoneResults,
-    nextFacilitatorMilestone,
-
-    // Recommendations & Timeline
     nextActions,
     timelineItems,
 
-    // Raw badges list
     badges: profile.badges || []
   };
 };

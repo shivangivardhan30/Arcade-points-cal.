@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth, API_URL } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { Sun, Moon, LogOut, Menu, User as UserIcon, Activity, Bell, LogIn, Key } from 'lucide-react';
+import { Sun, Moon, LogOut, Menu, User as UserIcon, Activity, Bell, LogIn, Key, Plus } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { AddProfileModal } from './AddProfileModal';
 
 export const Navbar = ({ onMenuClick }) => {
   const { user, logout, login } = useAuth();
@@ -13,6 +14,7 @@ export const Navbar = ({ onMenuClick }) => {
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const [hasUnread, setHasUnread] = useState(false);
+  const [isAddProfileOpen, setIsAddProfileOpen] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -80,6 +82,15 @@ export const Navbar = ({ onMenuClick }) => {
             <Link to="/leaderboard" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Leaderboard</Link>
             <Link to="/resources" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Resources</Link>
           </div>
+
+          {/* Add Profile Trigger */}
+          <button
+            onClick={() => setIsAddProfileOpen(true)}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-600 text-white font-extrabold text-xs hover:bg-indigo-700 transition-colors shadow-sm"
+          >
+            <Plus className="w-4 h-4" />
+            <span className="hidden sm:inline">Add Profile</span>
+          </button>
 
           {/* Light/Dark Toggle */}
           <button
@@ -183,6 +194,11 @@ export const Navbar = ({ onMenuClick }) => {
         </div>
 
       </div>
+
+      <AddProfileModal
+        isOpen={isAddProfileOpen}
+        onClose={() => setIsAddProfileOpen(false)}
+      />
     </header>
   );
 };

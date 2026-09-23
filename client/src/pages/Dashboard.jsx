@@ -1,222 +1,310 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Award, BookOpen, Clock, Activity, Shield, Share2, Printer, CheckCircle, ArrowUpRight, TrendingUp, Compass } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { useConfig } from '../context/ConfigContext';
+import { Award, Shield, Flame, Search, CheckCircle2, Circle, Gift, Calendar, ChevronLeft, ChevronRight, Trophy, Sparkles, Filter, ExternalLink } from 'lucide-react';
 
 export const Dashboard = () => {
   const { user } = useAuth();
+  const { calculatePoints, getMilestoneReached } = useConfig();
 
-  // Premium Dummy Data for Dashboard UI
-  const profile = {
-    name: user?.name || 'Shivangi Vardhan',
-    email: user?.email || 'shivangi@cloudarc.io',
-    memberSince: '2026',
-    role: user?.role || 'Professional Member',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80'
-  };
+  // Load active analyzed profile from localStorage if available
+  const [activeProfile, setActiveProfile] = useState(null);
+  const [badgeFilter, setBadgeFilter] = useState('all'); // 'all' | 'completed' | 'unearned'
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const stats = [
-    { label: 'Arcade Points', value: '42', subtitle: 'Estimated credits', Icon: Award, color: 'text-indigo-500 bg-indigo-500/10 border-indigo-500/20 dark:bg-indigo-500/5' },
-    { label: 'Labs Completed', value: '18', subtitle: 'Hands-on practice', Icon: Activity, color: 'text-blue-500 bg-blue-500/10 border-blue-500/20 dark:bg-blue-500/5' },
-    { label: 'Skill Badges', value: '12', subtitle: 'Credential verifications', Icon: Shield, color: 'text-purple-500 bg-purple-500/10 border-purple-500/20 dark:bg-purple-500/5' },
-    { label: 'Courses Completed', value: '8', subtitle: 'Learning tracks', Icon: BookOpen, color: 'text-pink-500 bg-pink-500/10 border-pink-500/20 dark:bg-pink-500/5' }
+  useEffect(() => {
+    const saved = localStorage.getItem('active_arcade_profile');
+    if (saved) {
+      try {
+        setActiveProfile(JSON.parse(saved));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, []);
+
+  // Profile fields with fallbacks
+  const profileName = activeProfile?.name || user?.name || 'Deepanshu Prajapati';
+  const avatarUrl = activeProfile?.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
+  const memberSince = activeProfile?.memberSince || 'Member since 2023';
+  
+  const skillBadgesCount = activeProfile?.skillBadgesCount !== undefined ? activeProfile.skillBadgesCount : 52;
+  const gameBadgesCount = activeProfile?.gameBadgesCount !== undefined ? activeProfile.gameBadgesCount : 8;
+  const totalBadges = skillBadgesCount + gameBadgesCount;
+
+  const totalPoints = activeProfile?.totalPoints !== undefined 
+    ? activeProfile.totalPoints 
+    : (skillBadgesCount * 0.5) + (gameBadgesCount * 1) + 15; // 49 pts with bonus
+
+  const bonusPoints = 15;
+
+  // Swag Tiers Data
+  const swagTiers = [
+    { name: 'Trooper Tier', requiredPts: 50, img: 'https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/swags/Trooper.png?raw=true', desc: 'Arcade pin set & stickers pack' },
+    { name: 'Ranger Tier', requiredPts: 75, img: 'https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/swags/Ranger.png?raw=true', desc: 'Arcade water bottle & notebook' },
+    { name: 'Champion Tier', requiredPts: 95, img: 'https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/swags/Champion.png?raw=true', desc: 'Arcade premium jacket & cap' },
+    { name: 'Legend Tier', requiredPts: 120, img: 'https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/swags/Legend.png?raw=true', desc: 'VIP Swag Box & Certificate' }
   ];
 
-  const recentActivities = [
-    { id: 1, action: 'Earned Skill Badge', item: 'Build and Secure Networks in Google Cloud', time: '2 hours ago', status: 'completed' },
-    { id: 2, action: 'Completed Quest', item: 'Baseline: Infrastructure Lab Track', time: '1 day ago', status: 'completed' },
-    { id: 3, action: 'Earned Skill Badge', item: 'Deploy and Manage Cloud Applications', time: '3 days ago', status: 'completed' },
-    { id: 4, action: 'Calculated Progress', item: 'Profile scan evaluation saved to logs', time: '4 days ago', status: 'log' }
-  ];
+  // Default badges list fallback
+  const allBadgesList = activeProfile?.badges && activeProfile.badges.length > 0 
+    ? activeProfile.badges 
+    : [
+        { title: 'Create and Manage Cloud Resources', category: 'Skill Badge', type: 'badge', earned: true },
+        { title: 'Perform Foundational Infrastructure Tasks in Google Cloud', category: 'Skill Badge', type: 'badge', earned: true },
+        { title: 'Build and Secure Networks in Google Cloud', category: 'Skill Badge', type: 'badge', earned: true },
+        { title: 'Level 1: Cloud Architecture Game', category: 'Game Badge', type: 'badge', earned: true },
+        { title: 'Arcade Trivia July 2026', category: 'Trivia Badge', type: 'badge', earned: true },
+        { title: 'Deploy and Manage Cloud Applications', category: 'Skill Badge', type: 'badge', earned: true },
+        { title: 'Automate Data Tasks on Google Cloud', category: 'Skill Badge', type: 'badge', earned: true },
+        { title: 'Engineer Data in Google Cloud', category: 'Skill Badge', type: 'badge', earned: false },
+        { title: 'Set Up an App Dev Environment on GCP', category: 'Skill Badge', type: 'badge', earned: false },
+        { title: 'Level 2: Data & Machine Learning Game', category: 'Game Badge', type: 'badge', earned: false }
+      ];
 
-  // Circular progress config
-  const radius = 55;
-  const stroke = 8;
-  const normalizedRadius = radius - stroke * 2;
-  const circumference = normalizedRadius * 2 * Math.PI;
-  const strokeDashoffset = circumference - (0.75 * circumference); // 75% progress dummy
+  const filteredBadges = allBadgesList.filter(b => {
+    const matchesSearch = b.title.toLowerCase().includes(searchQuery.toLowerCase());
+    if (badgeFilter === 'completed') return matchesSearch && (b.earned !== false);
+    if (badgeFilter === 'unearned') return matchesSearch && (b.earned === false);
+    return matchesSearch;
+  });
 
   return (
-    <div className="space-y-8 bg-mesh-grid pb-12">
+    <div className="space-y-6 pb-16">
       
-      {/* Title */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200/50 dark:border-slate-900/50">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-800 dark:text-white tracking-tight">Workspace Analytics</h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-semibold">
-            Welcome back, {profile.name}. Review your active certifications and tracking parameters.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button className="flex items-center gap-1.5 py-2.5 px-4 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-850 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-350 font-bold text-xs rounded-xl transition-all shadow-sm">
-            <Share2 className="w-4 h-4" /> Share Report
-          </button>
-          <button onClick={() => window.print()} className="flex items-center gap-1.5 py-2.5 px-5 bg-gradient-brand text-white font-bold text-xs rounded-xl shadow-md hover:opacity-95 transition-all btn-glow">
-            <Printer className="w-4 h-4" /> Export PDF
-          </button>
-        </div>
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-3">
+      {/* Top Grid: Profile Card, Total Points, Badges Distribution */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         
-        {/* Profile Card & Circular Progress */}
-        <div className="glass-card p-6 flex flex-col justify-between hover-lift lg:col-span-2 glow-card">
-          <div className="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-slate-200/50 dark:border-slate-800/40">
-            <div className="relative">
-              <img src={profile.avatar} alt="avatar" className="w-20 h-20 rounded-2xl object-cover ring-4 ring-indigo-500/10" />
-              <span className="absolute -bottom-2 -right-2 bg-gradient-brand text-white p-1 rounded-lg shadow">
-                <Compass className="w-4 h-4" />
-              </span>
-            </div>
-            <div className="text-center sm:text-left space-y-1.5">
-              <span className="text-[9px] font-extrabold uppercase tracking-wider bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 px-3 py-1 rounded-full border border-indigo-500/10">
-                {profile.role}
-              </span>
-              <h2 className="text-lg font-extrabold text-slate-800 dark:text-white mt-2">{profile.name}</h2>
-              <p className="text-[10px] text-slate-400 font-semibold">User ID: {profile.email} • Member since {profile.memberSince}</p>
-            </div>
-          </div>
-
-          <div className="grid gap-6 sm:grid-cols-2 pt-6">
-            
-            {/* Progress Bar metric */}
-            <div className="space-y-4">
-              <div className="flex justify-between items-center text-xs font-bold">
-                <span className="text-slate-400 uppercase tracking-wider text-[9px]">Arcade Milestone progress</span>
-                <span className="text-indigo-650 dark:text-indigo-400 font-extrabold">75% Completed</span>
-              </div>
-              <div className="w-full bg-slate-100 dark:bg-slate-900 rounded-full h-3.5 overflow-hidden border border-slate-200/30 dark:border-slate-800">
-                <div className="bg-gradient-brand h-3.5 rounded-full" style={{ width: '75%' }} />
-              </div>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold leading-normal">
-                You are currently <span className="font-bold text-slate-700 dark:text-slate-200">8 points</span> away from reaching the Gold Arcade Milestone Swag rewards.
-              </p>
-            </div>
-
-            {/* Circular Progress Ring */}
-            <div className="flex items-center gap-4 bg-slate-50 dark:bg-slate-950/20 p-4 rounded-2xl border border-slate-200/50 dark:border-slate-900/50">
-              <div className="relative flex items-center justify-center shrink-0">
-                <svg height={radius * 2} width={radius * 2} className="transform -rotate-90">
-                  <circle
-                    stroke="#e2e8f0"
-                    fill="transparent"
-                    strokeWidth={stroke}
-                    r={normalizedRadius}
-                    cx={radius}
-                    cy={radius}
-                    className="dark:stroke-slate-800"
-                  />
-                  <circle
-                    stroke="url(#radialGradientDashboard)"
-                    fill="transparent"
-                    strokeWidth={stroke}
-                    strokeDasharray={circumference + ' ' + circumference}
-                    style={{ strokeDashoffset }}
-                    strokeLinecap="round"
-                    r={normalizedRadius}
-                    cx={radius}
-                    cy={radius}
-                    className="transition-all duration-1000 ease-in-out"
-                  />
-                  <defs>
-                    <linearGradient id="radialGradientDashboard" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#3b82f6" />
-                      <stop offset="100%" stopColor="#a855f7" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-                <div className="absolute text-center pointer-events-none">
-                  <span className="text-xs font-black text-slate-800 dark:text-white">75%</span>
-                </div>
-              </div>
-              <div className="space-y-1 font-bold">
-                <span className="text-[9px] text-slate-400 uppercase tracking-wider block">Target completion</span>
-                <span className="text-xs text-slate-800 dark:text-white block">12 / 16 Badges</span>
-                <span className="text-[9px] text-emerald-500 flex items-center gap-0.5 mt-1 font-bold"><TrendingUp className="w-3.5 h-3.5" /> +18% this month</span>
+        {/* User Profile Card */}
+        <div className="lg:col-span-4 glass-card p-6 flex flex-col justify-between space-y-4 hover-lift glow-card">
+          <div className="flex items-center gap-4">
+            <img
+              src={avatarUrl}
+              alt="Avatar"
+              className="w-20 h-20 rounded-2xl object-cover ring-2 ring-indigo-500/20 border border-slate-200 dark:border-slate-800 shrink-0"
+            />
+            <div className="space-y-1">
+              <h2 className="text-xl font-black text-slate-900 dark:text-white truncate">{profileName}</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold">{memberSince}</p>
+              
+              <div className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2.5 py-0.5 rounded-md mt-1">
+                <Trophy className="w-3.5 h-3.5 text-amber-500" />
+                <span className="uppercase tracking-wider font-mono text-[10px]">Gold League</span>
               </div>
             </div>
-
           </div>
         </div>
 
-        {/* Milestone Quick Card */}
-        <div className="glass-card p-6 flex flex-col justify-between hover-lift glow-card">
-          <div className="space-y-3">
-            <span className="text-[9px] font-extrabold uppercase tracking-wider text-purple-650 bg-purple-500/10 border border-purple-500/20 px-2.5 py-1 rounded-md">
-              Active Tier
+        {/* Total Arcade Points Card */}
+        <div className="lg:col-span-4 glass-card p-6 flex flex-col justify-between space-y-3 hover-lift glow-card">
+          <span className="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">Total Arcade Points</span>
+          
+          <div className="flex items-baseline gap-2">
+            <span className="text-4xl sm:text-5xl font-black text-indigo-600 dark:text-indigo-400 font-heading">
+              {totalPoints}
             </span>
-            <h3 className="text-sm font-extrabold text-slate-800 dark:text-white uppercase tracking-wider pt-2">Silver Arcade Level</h3>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-normal font-semibold">
-              You completed 18 hands-on cloud quests and 12 badge credentials. Your score places you in the top 10% of local arcade participants.
-            </p>
+            <span className="text-xl font-bold text-slate-700 dark:text-slate-200">Pts</span>
           </div>
 
-          <div className="pt-4 border-t border-slate-200/50 dark:border-slate-800/40 flex items-center justify-between text-xs font-bold">
-            <span className="text-slate-400">Next milestone:</span>
-            <span className="text-indigo-650 dark:text-indigo-400 flex items-center gap-0.5 font-extrabold">
-              Gold Tier <ArrowUpRight className="w-4 h-4 animate-pulse" />
+          <div className="inline-flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-300 bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 rounded-lg w-fit font-semibold">
+            <span>Includes <strong className="text-indigo-600 dark:text-indigo-400 font-extrabold">{bonusPoints} bonus pts</strong></span>
+          </div>
+        </div>
+
+        {/* Badges Distribution Card */}
+        <div className="lg:col-span-4 glass-card p-6 flex flex-col justify-between space-y-4 hover-lift glow-card">
+          <div className="flex justify-between items-center">
+            <span className="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">Badges Distribution</span>
+            <span className="text-xs font-extrabold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-700">
+              {totalBadges} Total
             </span>
           </div>
+
+          <div className="grid grid-cols-2 gap-3 text-center">
+            <div className="p-3.5 bg-blue-500/10 border border-blue-500/20 rounded-xl space-y-1">
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-extrabold uppercase tracking-wider block">Skill Badges</span>
+              <span className="text-2xl font-black text-blue-600 dark:text-blue-400 block">{skillBadgesCount}</span>
+            </div>
+
+            <div className="p-3.5 bg-rose-500/10 border border-rose-500/20 rounded-xl space-y-1">
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-extrabold uppercase tracking-wider block">Game Badges</span>
+              <span className="text-2xl font-black text-rose-600 dark:text-rose-400 block">{gameBadgesCount}</span>
+            </div>
+          </div>
         </div>
 
       </div>
 
-      {/* Stats Counter Cards Grid */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat, idx) => {
-          const { Icon } = stat;
-          return (
-            <div key={idx} className="glass-card p-5 flex items-center justify-between hover-lift glow-card">
-              <div className="space-y-1 font-bold">
-                <span className="text-[9px] text-slate-400 uppercase tracking-wider">{stat.label}</span>
-                <h3 className="text-2xl font-extrabold text-slate-800 dark:text-white mt-1.5">{stat.value}</h3>
-                <span className="text-[9px] text-slate-450 font-semibold block">{stat.subtitle}</span>
-              </div>
-              <div className={`p-3.5 rounded-2xl ${stat.color} border border-indigo-500/10`}>
-                <Icon className="w-5 h-5 text-indigo-500" />
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Activity Timeline list */}
-      <div className="glass-card p-6 hover-lift glow-card">
-        <h3 className="text-xs font-extrabold text-slate-800 dark:text-white uppercase tracking-wider mb-6 flex items-center gap-2">
-          <Clock className="w-4 h-4 text-indigo-500" /> Recent Activity Timeline
-        </h3>
+      {/* Middle Row: Monthly Activity Heatmap & Season Prizes */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         
-        <div className="flow-root">
-          <ul className="-mb-8">
-            {recentActivities.map((act, actIdx) => (
-              <li key={act.id}>
-                <div className="relative pb-8">
-                  {actIdx !== recentActivities.length - 1 ? (
-                    <span className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-slate-200 dark:bg-slate-800" aria-hidden="true" />
-                  ) : null}
-                  <div className="relative flex space-x-3">
+        {/* Activity Heatmap Grid */}
+        <div className="lg:col-span-6 glass-card p-6 hover-lift glow-card space-y-4">
+          <div className="flex justify-between items-center pb-3 border-b border-slate-200/60 dark:border-slate-800/60">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-indigo-500" />
+              <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-300">Activity Calendar</h3>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-700">
+                August
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-2xl text-amber-500 shrink-0">
+              <Flame className="w-8 h-8" />
+            </div>
+            <div>
+              <span className="text-3xl font-black text-slate-900 dark:text-white block font-heading">4</span>
+              <span className="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 block">Active Learning Days</span>
+            </div>
+          </div>
+
+          {/* GitHub Style Heatmap Blocks */}
+          <div className="pt-2">
+            <div className="grid grid-cols-7 gap-2 max-w-sm">
+              {[...Array(28)].map((_, i) => {
+                const isActive = [2, 3, 4, 5].includes(i);
+                return (
+                  <div
+                    key={i}
+                    title={isActive ? `Badges earned on August ${i+1}` : `0 badges on August ${i+1}`}
+                    className={`h-5 rounded-md border transition-transform hover:scale-110 cursor-pointer ${
+                      isActive 
+                        ? 'bg-emerald-500 border-emerald-600' 
+                        : 'bg-slate-200/80 dark:bg-slate-800 border-slate-300/80 dark:border-slate-700'
+                    }`}
+                  />
+                );
+              })}
+            </div>
+            <div className="flex items-center justify-end gap-1.5 text-[10px] font-bold text-slate-400 mt-3">
+              <span>Less</span>
+              <div className="w-2.5 h-2.5 rounded bg-slate-200 dark:bg-slate-800" />
+              <div className="w-2.5 h-2.5 rounded bg-emerald-400" />
+              <div className="w-2.5 h-2.5 rounded bg-emerald-600" />
+              <span>More</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Season Prizes & Swags Showcase */}
+        <div className="lg:col-span-6 glass-card p-6 hover-lift glow-card space-y-4">
+          <div className="flex justify-between items-center pb-3 border-b border-slate-200/60 dark:border-slate-800/60">
+            <div className="flex items-center gap-2">
+              <Gift className="w-4 h-4 text-indigo-500" />
+              <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-300">Season Prizes & Swags</h3>
+            </div>
+          </div>
+
+          <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
+            {swagTiers.map((tier, idx) => {
+              const isUnlocked = totalPoints >= tier.requiredPts;
+              return (
+                <div
+                  key={idx}
+                  className={`p-3.5 rounded-xl border flex items-center justify-between gap-4 transition-all ${
+                    isUnlocked 
+                      ? 'bg-emerald-500/5 border-emerald-500/20 text-slate-800 dark:text-white' 
+                      : 'bg-slate-50/60 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <img src={tier.img} alt={tier.name} className="w-12 h-12 rounded-lg object-contain bg-white dark:bg-slate-800 p-1 border border-slate-200 dark:border-slate-700" />
                     <div>
-                      <span className={`h-8 w-8 rounded-full flex items-center justify-center ring-8 ring-white dark:ring-slate-950 ${
-                        act.status === 'completed' ? 'bg-emerald-50 text-emerald-500 dark:bg-emerald-950/20' : 'bg-indigo-50 text-indigo-500 dark:bg-indigo-950/20'
-                      }`}>
-                        <CheckCircle className="w-4 h-4" />
-                      </span>
-                    </div>
-                    <div className="flex-1 min-w-0 pt-1.5 flex justify-between space-x-4 text-xs">
-                      <div className="font-semibold text-slate-700 dark:text-slate-350">
-                        <span className="font-extrabold text-slate-800 dark:text-white">{act.action}</span> - {act.item}
-                      </div>
-                      <div className="text-right text-[10px] text-slate-400 whitespace-nowrap font-medium">
-                        {act.time}
-                      </div>
+                      <h4 className="text-sm font-extrabold">{tier.name}</h4>
+                      <p className="text-[10px] font-semibold text-slate-400">{tier.desc}</p>
                     </div>
                   </div>
+
+                  <div className="text-right shrink-0">
+                    <span className={`text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider ${
+                      isUnlocked ? 'bg-emerald-500 text-white' : 'bg-indigo-600 text-white'
+                    }`}>
+                      {isUnlocked ? 'Unlocked' : `${tier.requiredPts} PTS NEEDED`}
+                    </span>
+                  </div>
                 </div>
-              </li>
-            ))}
-          </ul>
+              );
+            })}
+          </div>
         </div>
+
+      </div>
+
+      {/* Bottom Section: Badges Explorer & Live Filter */}
+      <div className="glass-card p-6 hover-lift glow-card space-y-6">
+        
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 pb-4 border-b border-slate-200/60 dark:border-slate-800/60">
+          <div>
+            <h3 className="text-base font-extrabold text-slate-850 dark:text-white">Badges & Credentials Explorer</h3>
+            <p className="text-xs text-slate-400 font-semibold mt-0.5">Filter completed and missing Google Cloud Arcade badges</p>
+          </div>
+
+          {/* Search & Tabs */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative flex items-center">
+              <Search className="absolute left-3 w-4 h-4 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search badges..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9 pr-3 py-2 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-semibold text-slate-800 dark:text-white outline-none focus:border-indigo-500"
+              />
+            </div>
+
+            <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-900 p-1 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-bold">
+              <button
+                onClick={() => setBadgeFilter('all')}
+                className={`px-3 py-1.5 rounded-lg transition-all ${badgeFilter === 'all' ? 'bg-indigo-600 text-white shadow' : 'text-slate-600 dark:text-slate-400'}`}
+              >
+                All ({allBadgesList.length})
+              </button>
+              <button
+                onClick={() => setBadgeFilter('completed')}
+                className={`px-3 py-1.5 rounded-lg transition-all ${badgeFilter === 'completed' ? 'bg-indigo-600 text-white shadow' : 'text-slate-600 dark:text-slate-400'}`}
+              >
+                Completed
+              </button>
+              <button
+                onClick={() => setBadgeFilter('unearned')}
+                className={`px-3 py-1.5 rounded-lg transition-all ${badgeFilter === 'unearned' ? 'bg-indigo-600 text-white shadow' : 'text-slate-600 dark:text-slate-400'}`}
+              >
+                Incomplete
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Badges Cards Grid */}
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredBadges.map((badge, idx) => (
+            <div
+              key={idx}
+              className="p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white/60 dark:bg-slate-900/40 flex items-start justify-between gap-3 hover:border-indigo-500/40 transition-colors"
+            >
+              <div className="space-y-1 min-w-0">
+                <span className="text-[9px] font-extrabold uppercase tracking-wider text-indigo-500 bg-indigo-500/10 px-2 py-0.5 rounded">
+                  {badge.category || badge.type}
+                </span>
+                <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200 leading-snug truncate mt-1">
+                  {badge.title}
+                </h4>
+              </div>
+
+              {badge.earned !== false ? (
+                <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
+              ) : (
+                <Circle className="w-5 h-5 text-slate-350 dark:text-slate-700 shrink-0 mt-0.5" />
+              )}
+            </div>
+          ))}
+        </div>
+
       </div>
 
     </div>

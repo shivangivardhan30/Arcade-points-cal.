@@ -79,12 +79,13 @@ const DashboardLayout = () => {
           <Routes>
             {/* Public Pages */}
             <Route path="" element={<Home />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="milestones" element={<Milestones />} />
+            <Route path="arcade-facilitator" element={<Milestones />} />
             <Route path="leaderboard" element={<Leaderboard />} />
             <Route path="resources" element={<Resources />} />
 
-            {/* Private Guarded Pages */}
-            <Route path="dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-            <Route path="milestones" element={<PrivateRoute><Milestones /></PrivateRoute>} />
+            {/* Guarded Pages */}
             <Route path="analytics" element={<PrivateRoute><Analytics /></PrivateRoute>} />
             <Route path="settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
             <Route path="admin" element={<PrivateRoute><AdminRoute><AdminPanel /></AdminRoute></PrivateRoute>} />

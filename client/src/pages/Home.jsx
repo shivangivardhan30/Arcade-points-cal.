@@ -165,19 +165,19 @@ export const Home = () => {
       <div className="absolute bottom-20 left-1/3 -z-10 w-96 h-96 rounded-full bg-indigo-500/10 filter blur-3xl animate-blob-3 dark:bg-indigo-500/5" />
 
       {/* Hero Header */}
-      <section className="text-center py-20 sm:py-32 max-w-4xl mx-auto px-4">
+      <section className="text-center py-16 sm:py-28 max-w-4xl mx-auto px-4">
         
-        {/* Pulsing Tag Label */}
+        {/* Header Category Tag */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-indigo-500/20 bg-indigo-500/5 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-xs font-bold mb-8 shadow-sm"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-indigo-500/20 bg-indigo-500/5 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-xs font-bold mb-6 shadow-sm uppercase tracking-wider"
         >
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
           </span>
-          <span>CloudArc Pro v2.0 Platform is active</span>
+          <span>Google Cloud Arcade · Points Tracker · Facilitator Program</span>
         </motion.div>
 
         <motion.h1
@@ -186,8 +186,8 @@ export const Home = () => {
           transition={{ delay: 0.1 }}
           className="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-800 dark:text-white leading-[1.1]"
         >
-          Analyze & Elevate Your <br />
-          <span className="text-gradient-brand">Cloud Credentials</span>
+          Meet Your Ultimate & <br />
+          <span className="text-gradient-brand">Google Cloud Arcade</span> Points Calculator
         </motion.h1>
         
         <motion.p
@@ -196,38 +196,38 @@ export const Home = () => {
           transition={{ delay: 0.2 }}
           className="text-sm sm:text-base text-slate-500 dark:text-slate-400 mt-6 max-w-2xl mx-auto leading-relaxed font-medium"
         >
-          Connect your Google Cloud Skills Boost public profile link. Instantly verify completed badges, forecast next-tier points milestones, and publish standing records.
+          The #1 most reliable platform for the Google Cloud Arcade community. Calculate points, track completed & missing badges, climb live leaderboards, and monitor swag tier eligibility.
         </motion.p>
 
-        {/* URL Scanner block */}
+        {/* Profile URL Input Bar */}
         <motion.form
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
           onSubmit={handleScrape}
-          className="mt-12 max-w-2xl mx-auto flex flex-col sm:flex-row gap-3 bg-white/80 dark:bg-slate-900/60 p-2.5 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 backdrop-blur-md shadow-lg glow-card"
+          className="mt-10 max-w-2xl mx-auto flex flex-col sm:flex-row gap-3 bg-white/90 dark:bg-slate-900/80 p-2.5 rounded-3xl border-2 border-indigo-500/20 dark:border-indigo-500/30 backdrop-blur-md shadow-xl glow-card"
         >
           <div className="flex-1 relative flex items-center">
             <Search className="absolute left-4 w-5 h-5 text-indigo-500 dark:text-indigo-400" />
             <input
               type="url"
-              placeholder="Enter Google Skills Boost profile URL (or 'mock')"
+              placeholder="Paste your Google Cloud Skills Boost public profile URL (or 'mock')"
               value={profileUrl}
               onChange={(e) => setProfileUrl(e.target.value)}
-              className="w-full pl-11 pr-4 py-3 bg-transparent outline-none border-0 text-xs sm:text-sm text-slate-800 dark:text-white font-semibold placeholder:text-slate-400"
+              className="w-full pl-11 pr-4 py-3.5 bg-transparent outline-none border-0 text-xs sm:text-sm text-slate-800 dark:text-white font-semibold placeholder:text-slate-400"
               required
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="sm:w-auto py-3.5 px-8 rounded-xl bg-gradient-brand text-white text-xs font-bold shadow-md hover:shadow-lg disabled:opacity-50 transition-all duration-300 flex items-center justify-center gap-2 btn-glow"
+            className="sm:w-auto py-3.5 px-8 rounded-2xl bg-gradient-brand text-white text-xs font-bold shadow-lg hover:shadow-indigo-500/25 disabled:opacity-50 transition-all duration-300 flex items-center justify-center gap-2 btn-glow"
           >
             {loading ? (
               <div className="w-4.5 h-4.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
             ) : (
               <>
-                Analyze Profile
+                Calculate Points
                 <ArrowRight className="w-4 h-4" />
               </>
             )}
@@ -237,20 +237,53 @@ export const Home = () => {
         {error && (
           <p className="text-xs text-rose-500 font-bold mt-4 text-center">{error}</p>
         )}
+
+        <div className="mt-4 flex justify-center items-center text-xs font-semibold text-slate-500 dark:text-slate-400 gap-1.5">
+          <span>Having trouble finding your public profile URL?</span>
+          <button
+            onClick={() => navigate('/resources')}
+            className="text-indigo-600 dark:text-indigo-400 font-bold hover:underline inline-flex items-center gap-0.5"
+          >
+            Click here for help <ArrowUpRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+      </section>
+
+      {/* Live Platform Engagement Ticker */}
+      <section className="w-full border-y border-slate-200/80 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md py-6 mb-16">
+        <div className="max-w-5xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          <div className="space-y-1">
+            <span className="text-2xl sm:text-3xl font-black text-indigo-600 dark:text-indigo-400 font-heading">142.3K+</span>
+            <span className="block text-[10px] sm:text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">Total Visitors</span>
+          </div>
+          <div className="space-y-1 md:border-l border-slate-200 dark:border-slate-800">
+            <span className="text-2xl sm:text-3xl font-black text-amber-500 font-heading">2.13M+</span>
+            <span className="block text-[10px] sm:text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">Analyses Run</span>
+          </div>
+          <div className="space-y-1 md:border-l border-slate-200 dark:border-slate-800">
+            <span className="text-2xl sm:text-3xl font-black text-emerald-500 font-heading">52.4K+</span>
+            <span className="block text-[10px] sm:text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">Unique Profiles</span>
+          </div>
+          <div className="space-y-1 md:border-l border-slate-200 dark:border-slate-800">
+            <span className="text-2xl sm:text-3xl font-black text-purple-500 font-heading">98%</span>
+            <span className="block text-[10px] sm:text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">Returning Users</span>
+          </div>
+        </div>
       </section>
 
       {/* Features Grid */}
-      <section className="max-w-6xl mx-auto px-4 py-16">
-        <div className="text-center max-w-xl mx-auto mb-16">
-          <h2 className="text-xs font-extrabold uppercase tracking-wider text-indigo-550 dark:text-indigo-400">Features Matrix</h2>
-          <p className="text-xl font-bold text-slate-800 dark:text-white mt-2">Professional SaaS points evaluation tracking tool</p>
+      <section className="max-w-6xl mx-auto px-4 py-10">
+        <div className="text-center max-w-xl mx-auto mb-12">
+          <h2 className="text-xs font-extrabold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Everything You Need</h2>
+          <p className="text-2xl font-black text-slate-800 dark:text-white mt-2">Master Google Cloud Arcade</p>
         </div>
         
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((f, idx) => {
             const { Icon } = f;
             return (
-              <div key={idx} className="glass-card p-6 border border-slate-200/50 dark:border-slate-800/50 hover-lift glow-card">
+              <div key={idx} className="glass-card p-6 border border-slate-200/60 dark:border-slate-800/60 hover-lift glow-card">
                 <div className={`p-3.5 rounded-2xl w-fit ${f.color} border border-indigo-500/10`}>
                   <Icon className="w-5 h-5" />
                 </div>
@@ -265,63 +298,95 @@ export const Home = () => {
       {/* Scrape Result Evaluation Modal */}
       <AnimatePresence>
         {scrapedData && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md">
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="w-full max-w-xl glass-card p-6 shadow-2xl overflow-hidden glow-card"
+              className="w-full max-w-2xl glass-card p-6 shadow-2xl overflow-hidden glow-card max-h-[90vh] overflow-y-auto"
             >
-              <div className="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-3.5">
-                <h2 className="text-sm font-bold text-slate-805 dark:text-white flex items-center gap-2">
-                  <ShieldCheck className="w-5 h-5 text-indigo-500" /> Scanned Profile Results
-                </h2>
+              <div className="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-4">
+                <div className="flex items-center gap-3">
+                  <img
+                    src={scrapedData.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}
+                    alt="avatar"
+                    className="w-12 h-12 rounded-xl object-cover ring-2 ring-indigo-500/20"
+                  />
+                  <div>
+                    <h2 className="text-base font-extrabold text-slate-850 dark:text-white flex items-center gap-2">
+                      {scrapedData.name}
+                    </h2>
+                    <p className="text-[10px] text-slate-400 font-semibold">{scrapedData.memberSince || 'Google Cloud Arcade Learner'}</p>
+                  </div>
+                </div>
+
+                <span className="text-[10px] font-extrabold uppercase tracking-wider bg-emerald-500/10 text-emerald-500 px-3 py-1 rounded-full border border-emerald-500/20">
+                  {scrapedData.swagTier || 'Standard Swag Eligible'}
+                </span>
               </div>
               
-              <div className="py-5 space-y-4 text-xs font-semibold">
-                <div className="p-4 bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-brand text-white flex items-center justify-center font-bold text-sm">
-                    {scrapedData.name?.charAt(0) || 'U'}
-                  </div>
-                  <div>
-                    <span className="text-[9px] text-slate-400 block font-bold uppercase tracking-wider">PROFILE OWNER</span>
-                    <span className="text-sm font-extrabold text-slate-850 dark:text-white mt-0.5 block">{scrapedData.name}</span>
-                  </div>
-                </div>
-
-                <div className="grid gap-4 sm:grid-cols-3 text-center font-bold">
-                  <div className="p-3 bg-blue-500/5 border border-blue-500/10 text-blue-500 rounded-xl">
-                    <span className="text-[9px] text-slate-400 block uppercase tracking-wider">Labs Completed</span>
-                    <span className="text-lg font-extrabold mt-1 block">{scrapedData.labsCount}</span>
-                  </div>
-
-                  <div className="p-3 bg-purple-500/5 border border-purple-500/10 text-purple-500 rounded-xl">
-                    <span className="text-[9px] text-slate-400 block uppercase tracking-wider">Skill Badges</span>
-                    <span className="text-lg font-extrabold mt-1 block">{scrapedData.badgesCount}</span>
-                  </div>
-
-                  <div className="p-3 bg-indigo-500/5 border border-indigo-500/10 text-indigo-500 rounded-xl">
-                    <span className="text-[9px] text-slate-400 block uppercase tracking-wider">Arcade Score</span>
-                    <span className="text-lg font-extrabold mt-1 block">{calculatePoints(scrapedData.labsCount, scrapedData.badgesCount)} pts</span>
-                  </div>
-                </div>
-
-                <div className="p-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl flex justify-between items-center">
-                  <div>
-                    <span className="text-[9px] text-slate-400 block uppercase tracking-wider font-bold">Calculated Milestone</span>
-                    <span className="text-xs font-extrabold text-indigo-600 dark:text-indigo-400 mt-1 block">
-                      {getMilestoneReached(calculatePoints(scrapedData.labsCount, scrapedData.badgesCount))}
+              <div className="py-5 space-y-5">
+                {/* Stats Summary Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center font-bold">
+                  <div className="p-3.5 bg-indigo-500/5 border border-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-xl">
+                    <span className="text-[9px] text-slate-400 block uppercase tracking-wider">Total Arcade Points</span>
+                    <span className="text-xl font-black mt-1 block">
+                      {scrapedData.totalPoints !== undefined ? scrapedData.totalPoints : calculatePoints(scrapedData.labsCount, scrapedData.badgesCount)} pts
                     </span>
                   </div>
-                  <ChevronDown className="w-4 h-4 text-slate-400 -rotate-90" />
+
+                  <div className="p-3.5 bg-purple-500/5 border border-purple-500/10 text-purple-500 rounded-xl">
+                    <span className="text-[9px] text-slate-400 block uppercase tracking-wider">Skill Badges (0.5pt)</span>
+                    <span className="text-xl font-black mt-1 block">{scrapedData.skillBadgesCount || scrapedData.badgesCount}</span>
+                  </div>
+
+                  <div className="p-3.5 bg-amber-500/5 border border-amber-500/10 text-amber-500 rounded-xl">
+                    <span className="text-[9px] text-slate-400 block uppercase tracking-wider">Game Badges (1pt)</span>
+                    <span className="text-xl font-black mt-1 block">{scrapedData.gameBadgesCount || 0}</span>
+                  </div>
+
+                  <div className="p-3.5 bg-blue-500/5 border border-blue-500/10 text-blue-500 rounded-xl">
+                    <span className="text-[9px] text-slate-400 block uppercase tracking-wider">Trivia / Quests (1pt)</span>
+                    <span className="text-xl font-black mt-1 block">{(scrapedData.triviaBadgesCount || 0) + (scrapedData.labsCount || 0)}</span>
+                  </div>
                 </div>
+
+                {/* Milestone Progress Banner */}
+                <div className="p-4 bg-slate-50 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 rounded-xl flex justify-between items-center">
+                  <div>
+                    <span className="text-[9px] text-slate-400 block uppercase tracking-wider font-bold">Arcade Facilitator Milestone</span>
+                    <span className="text-xs font-extrabold text-indigo-600 dark:text-indigo-400 mt-1 block">
+                      {getMilestoneReached(scrapedData.totalPoints || calculatePoints(scrapedData.labsCount, scrapedData.badgesCount))}
+                    </span>
+                  </div>
+                  <Trophy className="w-5 h-5 text-amber-500" />
+                </div>
+
+                {/* Badges List Preview */}
+                {scrapedData.badges && scrapedData.badges.length > 0 && (
+                  <div className="space-y-2">
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block">
+                      Extracted Credentials & Badges ({scrapedData.badges.length})
+                    </span>
+                    <div className="max-h-40 overflow-y-auto space-y-1.5 pr-1">
+                      {scrapedData.badges.map((b, idx) => (
+                        <div key={idx} className="flex justify-between items-center p-2 rounded-lg bg-slate-100/60 dark:bg-slate-900/40 border border-slate-200/40 dark:border-slate-800/40 text-xs">
+                          <span className="font-semibold text-slate-700 dark:text-slate-200 truncate max-w-sm">{b.title}</span>
+                          <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-500 shrink-0 ml-2">
+                            {b.category || b.type}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-4 pt-3.5 border-t border-slate-200 dark:border-slate-800">
+              <div className="flex gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
                 <button
                   onClick={() => setScrapedData(null)}
-                  className="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+                  className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
                 >
                   Close
                 </button>
@@ -329,7 +394,7 @@ export const Home = () => {
                 <button
                   onClick={handleSaveScraped}
                   disabled={saving || saveSuccess}
-                  className="flex-1 py-2.5 rounded-xl bg-gradient-brand text-white text-xs font-bold hover:opacity-90 transition-all flex items-center justify-center gap-1.5 shadow-sm btn-glow"
+                  className="flex-1 py-3 rounded-xl bg-gradient-brand text-white text-xs font-bold hover:opacity-90 transition-all flex items-center justify-center gap-1.5 shadow-md btn-glow"
                 >
                   {saving ? (
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -340,7 +405,7 @@ export const Home = () => {
                     </>
                   ) : (
                     <>
-                      {user ? 'Save to History' : 'Sign In to Save'}
+                      {user ? 'Save Profile' : 'Sign In to Save'}
                     </>
                   )}
                 </button>
@@ -388,7 +453,7 @@ export const Home = () => {
 
       {/* Footer */}
       <footer className="text-center mt-20 pt-8 border-t border-slate-200 dark:border-slate-800 max-w-6xl mx-auto px-4 text-[10px] text-slate-400 space-y-2 font-semibold">
-        <p>© 2026 CloudArc Pro. Independent verification service. Not affiliated with Google LLC.</p>
+        <p>© 2026 CloudArc Pro. Independent Google Cloud Arcade points calculator. Not affiliated with Google LLC.</p>
         <p>Google Cloud, Google Skills Boost, and Qwiklabs are trademarks of Google LLC.</p>
       </footer>
 

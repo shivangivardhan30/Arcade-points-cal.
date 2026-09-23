@@ -4,7 +4,7 @@ const { getConfig, updateConfig } = require('../controllers/configController');
 const { protect } = require('../middleware/authMiddleware');
 const { adminOnly } = require('../middleware/adminMiddleware');
 
-router.get('/', protect, getConfig);
+router.get('/', getConfig);
 router.put('/', protect, adminOnly, updateConfig);
 
 module.exports = router;

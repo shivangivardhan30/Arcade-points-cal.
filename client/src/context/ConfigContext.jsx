@@ -9,30 +9,35 @@ export const ConfigProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const defaultConfig = {
+    pointsPerLab: 1,
+    pointsPerBadge: 2,
+    milestones: [
+      { name: 'Bronze Arcade', pointsRequired: 10 },
+      { name: 'Silver Arcade', pointsRequired: 25 },
+      { name: 'Gold Arcade', pointsRequired: 50 },
+      { name: 'Ultimate Arcade Champion', pointsRequired: 80 }
+    ]
+  };
+
   const fetchConfig = useCallback(async () => {
-    if (!token) {
-      setLoading(false);
-      return;
-    }
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/config`, {
-        headers: getAuthHeaders(),
-      });
+      const response = await fetch(`${API_URL}/config`);
       if (response.ok) {
         const data = await response.json();
         setConfig(data);
         setError(null);
       } else {
-        throw new Error('Failed to fetch config');
+        setConfig(defaultConfig);
       }
     } catch (err) {
       console.error('Error fetching config:', err);
-      setError(err.message);
+      setConfig(defaultConfig);
     } finally {
       setLoading(false);
     }
-  }, [token, getAuthHeaders]);
+  }, []);
 
   useEffect(() => {
     fetchConfig();
@@ -40,17 +45,18 @@ export const ConfigProvider = ({ children }) => {
 
   // Helper: compute total points
   const calculatePoints = useCallback((labs, badges) => {
-    if (!config) return 0;
+    const activeConfig = config || defaultConfig;
     const l = parseInt(labs) || 0;
     const b = parseInt(badges) || 0;
-    return (l * config.pointsPerLab) + (b * config.pointsPerBadge);
+    return (l * activeConfig.pointsPerLab) + (b * activeConfig.pointsPerBadge);
   }, [config]);
 
   // Helper: get current milestone achieved
   const getMilestoneReached = useCallback((points) => {
-    if (!config || !config.milestones || config.milestones.length === 0) return 'None';
+    const activeConfig = config || defaultConfig;
+    if (!activeConfig.milestones || activeConfig.milestones.length === 0) return 'None';
     
-    const sortedMilestones = [...config.milestones].sort((a, b) => a.pointsRequired - b.pointsRequired);
+    const sortedMilestones = [...activeConfig.milestones].sort((a, b) => a.pointsRequired - b.pointsRequired);
     let milestone = 'None';
     for (let i = 0; i < sortedMilestones.length; i++) {
       if (points >= sortedMilestones[i].pointsRequired) {
@@ -62,11 +68,12 @@ export const ConfigProvider = ({ children }) => {
 
   // Helper: get details of next milestone
   const getNextMilestoneInfo = useCallback((points) => {
-    if (!config || !config.milestones || config.milestones.length === 0) {
+    const activeConfig = config || defaultConfig;
+    if (!activeConfig.milestones || activeConfig.milestones.length === 0) {
       return { nextMilestone: null, pointsNeeded: 0, progress: 100 };
     }
 
-    const sortedMilestones = [...config.milestones].sort((a, b) => a.pointsRequired - b.pointsRequired);
+    const sortedMilestones = [...activeConfig.milestones].sort((a, b) => a.pointsRequired - b.pointsRequired);
     
     // Find first milestone that user hasn't reached yet
     const next = sortedMilestones.find(m => points < m.pointsRequired);
@@ -92,8 +99,8 @@ export const ConfigProvider = ({ children }) => {
     const progress = Math.max(0, Math.min(100, Math.round((tierProgress / tierTotalRange) * 100)));
 
     // Calculate how many labs or badges are needed specifically (rounded up)
-    const labsNeeded = Math.ceil(pointsNeeded / config.pointsPerLab);
-    const badgesNeeded = Math.ceil(pointsNeeded / config.pointsPerBadge);
+    const labsNeeded = Math.ceil(pointsNeeded / (activeConfig.pointsPerLab || 1));
+    const badgesNeeded = Math.ceil(pointsNeeded / (activeConfig.pointsPerBadge || 2));
 
     return {
       nextMilestone: next,

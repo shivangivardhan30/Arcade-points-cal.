@@ -73,13 +73,13 @@ export const Navbar = ({ onMenuClick }) => {
         {/* Right Side: Quick Action Row */}
         <div className="flex items-center gap-3">
           
-          {!user && (
-            <div className="hidden md:flex items-center gap-5 text-xs font-bold text-slate-500 dark:text-slate-400 mr-2">
-              <Link to="/" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Home</Link>
-              <Link to="/leaderboard" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Leaderboard</Link>
-              <Link to="/resources" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Resources</Link>
-            </div>
-          )}
+          <div className="hidden lg:flex items-center gap-6 text-xs font-extrabold text-slate-600 dark:text-slate-300 mr-4">
+            <Link to="/" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Home</Link>
+            <Link to="/dashboard" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Dashboard</Link>
+            <Link to="/arcade-facilitator" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Arcade Facilitator</Link>
+            <Link to="/leaderboard" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Leaderboard</Link>
+            <Link to="/resources" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Resources</Link>
+          </div>
 
           {/* Light/Dark Toggle */}
           <button

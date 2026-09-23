@@ -17,25 +17,37 @@ const scrapeProfile = async (req, res) => {
       profileUrl.includes('test') || 
       !profileUrl.startsWith('http')
     ) {
-      // Return predefined high-quality mock data for testing
+      const mockSkillBadges = 8;
+      const mockGameBadges = 4;
+      const mockTriviaBadges = 3;
+      const mockQuests = 6;
+      const totalPoints = (mockSkillBadges * 0.5) + (mockGameBadges * 1) + (mockTriviaBadges * 1) + (mockQuests * 1);
+
       return res.json({
         success: true,
         name: 'Google Cloud Champion (Mock Account)',
         profileUrl,
-        labsCount: 15,
-        badgesCount: 6,
+        avatar: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+        memberSince: 'Joined 2024',
+        labsCount: mockQuests,
+        badgesCount: mockSkillBadges,
+        skillBadgesCount: mockSkillBadges,
+        gameBadgesCount: mockGameBadges,
+        triviaBadgesCount: mockTriviaBadges,
+        totalPoints,
+        swagTier: totalPoints >= 45 ? 'Champion Swag Tier' : totalPoints >= 25 ? 'Premium Swag Tier' : totalPoints >= 10 ? 'Standard Swag Tier' : 'Novice Learner',
         badges: [
-          { title: 'Google Cloud Essentials (Quest)', type: 'lab' },
-          { title: 'Create and Manage Cloud Resources (Skill Badge)', type: 'badge' },
-          { title: 'Perform Foundational Infrastructure Tasks in Google Cloud (Skill Badge)', type: 'badge' },
-          { title: 'Baseline: Infrastructure (Quest)', type: 'lab' },
-          { title: 'Cloud Engineering Learning Path', type: 'lab' },
-          { title: 'Build and Secure Networks in Google Cloud (Skill Badge)', type: 'badge' },
-          { title: 'Automate Data Tasks on Google Cloud (Skill Badge)', type: 'badge' },
-          { title: 'Deploy and Manage Cloud Applications (Skill Badge)', type: 'badge' },
-          { title: 'Kubernetes in Google Cloud (Quest)', type: 'lab' },
-          { title: 'Engineer Data in Google Cloud (Skill Badge)', type: 'badge' },
-          { title: 'Security & Identity Fundamentals (Quest)', type: 'lab' }
+          { title: 'Google Cloud Essentials (Quest)', type: 'lab', category: 'Quest' },
+          { title: 'Create and Manage Cloud Resources', type: 'badge', category: 'Skill Badge' },
+          { title: 'Perform Foundational Infrastructure Tasks in Google Cloud', type: 'badge', category: 'Skill Badge' },
+          { title: 'Baseline: Infrastructure', type: 'lab', category: 'Quest' },
+          { title: 'Arcade Trivia July 2026', type: 'badge', category: 'Trivia Badge' },
+          { title: 'Level 1: Cloud Architecture Game', type: 'badge', category: 'Game Badge' },
+          { title: 'Build and Secure Networks in Google Cloud', type: 'badge', category: 'Skill Badge' },
+          { title: 'Automate Data Tasks on Google Cloud', type: 'badge', category: 'Skill Badge' },
+          { title: 'Deploy and Manage Cloud Applications', type: 'badge', category: 'Skill Badge' },
+          { title: 'Kubernetes in Google Cloud', type: 'lab', category: 'Quest' },
+          { title: 'Engineer Data in Google Cloud', type: 'badge', category: 'Skill Badge' }
         ]
       });
     }
@@ -51,16 +63,16 @@ const scrapeProfile = async (req, res) => {
       if (!response.ok) {
         if (response.status === 403) {
           return res.status(403).json({
-            message: 'Google Request Blocked: Google Cloud Skills Boost returned 403 Forbidden. This can happen if the site blocks automated requests. Please ensure your profile public visibility is enabled, or use "mock" to evaluate points.'
+            message: 'Google Request Blocked: Google Cloud Skills Boost returned 403 Forbidden. Please verify profile public visibility or try using "mock".'
           });
         }
         if (response.status === 404) {
           return res.status(404).json({
-            message: 'Profile Not Found: The profile link returned 404 Not Found. Please verify that the unique profile URL ID is correct.'
+            message: 'Profile Not Found: The link returned 404 Not Found. Please check your unique profile ID URL.'
           });
         }
         return res.status(response.status).json({ 
-          message: `Google Request Failed: HTTP ${response.status}. Verify that the profile URL is active and public.` 
+          message: `Google Request Failed: HTTP ${response.status}. Verify profile link is public.` 
         });
       }
 
@@ -73,80 +85,116 @@ const scrapeProfile = async (req, res) => {
                  $('.ql-headline-1').first().text().trim() || 
                  'Arcade Member';
                  
-      // Clean name string
       name = name.replace(/\s+/g, ' ');
 
-      const badges = [];
-      let labsCount = 0;
-      let badgesCount = 0;
+      // Extract Avatar URL
+      let avatar = $('img.public-profile__avatar').attr('src') || 
+                   $('.profile-avatar img').attr('src') || 
+                   'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
 
-      // Extract all badges. Skills Boost displays badges in divs containing titles
-      // Check standard selectors for profile pages
-      const badgeContainers = $('.profile-badge, .badge, div[class*="badge"]');
+      // Extract Member Since
+      let memberSince = $('.public-profile__member-since').text().trim() || 
+                        $('span:contains("Member since")').text().trim() || 
+                        'Google Cloud Learner';
+
+      const badges = [];
+      let skillBadgesCount = 0;
+      let gameBadgesCount = 0;
+      let triviaBadgesCount = 0;
+      let questsCount = 0;
+
+      const badgeContainers = $('.profile-badge, .badge, div[class*="badge"], .public-profile-badge');
 
       if (badgeContainers.length > 0) {
         badgeContainers.each((idx, el) => {
-          const badgeText = $(el).find('.ql-subheading-1, .ql-body-2, span, p').first().text().trim() || 
+          const badgeText = $(el).find('.ql-subheading-1, .ql-body-2, .public-profile-badge__name, span, p').first().text().trim() || 
                             $(el).text().trim();
           
           if (badgeText && !badges.some(b => b.title === badgeText)) {
-            // Determine type: Skill Badge or Quest/Lab-equivalent
-            const isSkillBadge = badgeText.toLowerCase().includes('skill badge') || 
-                                 badgeText.toLowerCase().includes('assessment') ||
-                                 $(el).find('img').attr('src')?.toLowerCase().includes('skill_badge');
+            const lowerText = badgeText.toLowerCase();
+            const imgSrc = $(el).find('img').attr('src')?.toLowerCase() || '';
 
-            const type = isSkillBadge ? 'badge' : 'lab';
-            
-            if (isSkillBadge) {
-              badgesCount++;
+            let category = 'Quest';
+            let type = 'lab';
+
+            if (lowerText.includes('trivia')) {
+              category = 'Trivia Badge';
+              type = 'badge';
+              triviaBadgesCount++;
+            } else if (lowerText.includes('level') || lowerText.includes('game') || lowerText.includes('monitored')) {
+              category = 'Game Badge';
+              type = 'badge';
+              gameBadgesCount++;
+            } else if (lowerText.includes('skill badge') || imgSrc.includes('skill_badge')) {
+              category = 'Skill Badge';
+              type = 'badge';
+              skillBadgesCount++;
             } else {
-              labsCount++;
+              category = 'Quest';
+              type = 'lab';
+              questsCount++;
             }
 
             badges.push({
               title: badgeText,
-              type
+              type,
+              category
             });
           }
         });
       } else {
-        // Fallback: search for ql headings or other blocks containing badge descriptions
         $('span[class*="ql-subheading"], span[class*="ql-body"], p[class*="ql-body"]').each((idx, el) => {
           const text = $(el).text().trim();
-          // Profile badges have specific texts
-          if (text.length > 5 && text.length < 100 && (text.includes('Quest') || text.includes('Badge') || text.includes('Course'))) {
-            const isSkillBadge = text.toLowerCase().includes('skill badge');
-            const type = isSkillBadge ? 'badge' : 'lab';
-            
+          if (text.length > 5 && text.length < 100 && (text.includes('Quest') || text.includes('Badge') || text.includes('Course') || text.includes('Trivia'))) {
+            const lowerText = text.toLowerCase();
+            let category = 'Quest';
+            let type = 'lab';
+
+            if (lowerText.includes('trivia')) {
+              category = 'Trivia Badge';
+              type = 'badge';
+              triviaBadgesCount++;
+            } else if (lowerText.includes('level') || lowerText.includes('game')) {
+              category = 'Game Badge';
+              type = 'badge';
+              gameBadgesCount++;
+            } else if (lowerText.includes('skill badge')) {
+              category = 'Skill Badge';
+              type = 'badge';
+              skillBadgesCount++;
+            } else {
+              category = 'Quest';
+              type = 'lab';
+              questsCount++;
+            }
+
             if (!badges.some(b => b.title === text)) {
-              if (isSkillBadge) {
-                badgesCount++;
-              } else {
-                labsCount++;
-              }
-              badges.push({ title: text, type });
+              badges.push({ title: text, type, category });
             }
           }
         });
       }
 
-      // Check if profile explicitly states no badges have been earned yet
-      const noBadgesEarned = html.toLowerCase().includes("hasn't earned any badges yet") || 
-                             html.toLowerCase().includes("has not earned any badges");
+      const totalPoints = (skillBadgesCount * 0.5) + (gameBadgesCount * 1) + (triviaBadgesCount * 1) + (questsCount * 1);
 
-      // If scraping returns nothing and name is default, we assume it is not public
-      if (badges.length === 0 && !noBadgesEarned && name === 'Arcade Member') {
-        return res.status(422).json({
-          message: 'The profile page loaded, but no badges or user info were found. Verify that the profile has public visibility enabled.'
-        });
-      }
+      let swagTier = 'Novice Learner';
+      if (totalPoints >= 45) swagTier = 'Champion Swag Tier';
+      else if (totalPoints >= 25) swagTier = 'Premium Swag Tier';
+      else if (totalPoints >= 10) swagTier = 'Standard Swag Tier';
 
       res.json({
         success: true,
         name,
+        avatar,
+        memberSince,
         profileUrl,
-        labsCount: labsCount,
-        badgesCount: badgesCount,
+        labsCount: questsCount,
+        badgesCount: skillBadgesCount,
+        skillBadgesCount,
+        gameBadgesCount,
+        triviaBadgesCount,
+        totalPoints,
+        swagTier,
         badges
       });
 

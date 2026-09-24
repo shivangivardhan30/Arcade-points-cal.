@@ -19,7 +19,7 @@ import { Footer } from '../components/Footer';
 
 import { fetchProfileData } from '../services/profileService';
 import { calculateArcadeMetrics } from '../services/calculatorService';
-import { User, Compass } from 'lucide-react';
+import { User, Cloud } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const Home = () => {
@@ -37,7 +37,7 @@ export const Home = () => {
       setMetrics(calculatedMetrics);
     } catch (err) {
       console.error(err);
-      setError(err.message || 'Unable to retrieve profile data. Please check the URL and try again.');
+      setError(err.message || 'Unable to calculate your Arcade points. Your Google Skills Boost profile could not be read. Please make sure your profile is public and try again.');
       setMetrics(null);
     } finally {
       setLoading(false);
@@ -50,7 +50,7 @@ export const Home = () => {
   };
 
   return (
-    <div id="home" className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300 font-sans">
+    <div id="home" className="min-h-screen bg-[#000000] text-slate-100 transition-colors duration-300 font-sans bg-mesh-grid">
       
       {/* Header Navigation */}
       <Navbar />
@@ -58,32 +58,33 @@ export const Home = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
         
         {/* HERO INPUT SECTION */}
-        <section className="text-center py-8 sm:py-16 space-y-6 max-w-4xl mx-auto">
+        <section className="text-center py-8 sm:py-16 space-y-6 max-w-4xl mx-auto relative">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-indigo-500/20 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-xs font-bold uppercase tracking-wider shadow-sm"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-xs font-bold uppercase tracking-wider shadow-sm"
           >
-            <Compass className="w-4 h-4 text-indigo-500" />
-            <span>Google Cloud Arcade Community Tracker</span>
+            <Cloud className="w-4 h-4 text-blue-400" />
+            <span>Google Cloud Arcade • Points & Milestone Progress</span>
           </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-4xl sm:text-6xl font-black font-heading text-slate-900 dark:text-white tracking-tight leading-[1.1]"
+            className="text-4xl sm:text-6xl font-black font-heading text-white tracking-tight leading-[1.1]"
           >
-            Arcade Points Calculator
+            GOOGLE CLOUD ARCADE <br />
+            <span className="text-gradient-brand">POINTS CALCULATOR</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-sm sm:text-base text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed"
+            className="text-sm sm:text-base text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed"
           >
-            Track your Google Cloud Arcade progress, points, badges, milestones, and next goals in one place.
+            Track your Arcade points, badge breakdown, cohort milestones, and next goal standings in one place.
           </motion.p>
 
           {/* Calculator Input */}
@@ -131,7 +132,7 @@ export const Home = () => {
               </div>
 
               {/* 3. Tier Progress & Badge Tracker Grid */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div id="milestones" className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <TierProgress metrics={metrics} />
                 <BadgeTracker metrics={metrics} />
               </div>
@@ -151,12 +152,12 @@ export const Home = () => {
 
         {/* EMPTY STATE (Before calculation) */}
         {!metrics && !loading && (
-          <div className="glass-card p-10 border border-slate-200/80 dark:border-slate-800 rounded-3xl text-center space-y-3 max-w-2xl mx-auto my-8 glow-card">
-            <User className="w-10 h-10 text-indigo-500/60 mx-auto" />
-            <h3 className="text-base font-extrabold text-slate-800 dark:text-slate-200">
+          <div className="glass-card p-10 border border-[#123a63] bg-[#07111f]/80 rounded-3xl text-center space-y-3 max-w-2xl mx-auto my-8 glow-card">
+            <User className="w-10 h-10 text-blue-400/60 mx-auto" />
+            <h3 className="text-base font-extrabold text-white">
               No Profile Evaluated Yet
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+            <p className="text-xs text-slate-400 font-medium">
               Enter your Google Skills Boost profile URL above to see your Arcade progress, calculated points, and tier standings.
             </p>
           </div>
@@ -180,4 +181,3 @@ export const Home = () => {
 };
 
 export default Home;
-

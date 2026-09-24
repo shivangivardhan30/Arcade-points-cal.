@@ -1,18 +1,18 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Award, ShieldAlert, X, ChevronRight, Trophy, GraduationCap, Home, BarChart3, Settings, Milestone } from 'lucide-react';
+import { LayoutDashboard, Award, ShieldAlert, X, ChevronRight, Home, BookOpen, Settings, Layers, Calculator } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export const Sidebar = ({ isOpen, onClose }) => {
   const { user } = useAuth();
 
   const links = [
-    { name: 'Home Analyzer', path: '/', Icon: Home },
-    { name: 'Dashboard', path: '/dashboard', Icon: LayoutDashboard },
-    { name: 'Milestones', path: '/milestones', Icon: Milestone },
-    { name: 'Leaderboard', path: '/leaderboard', Icon: Trophy },
-    { name: 'Analytics', path: '/analytics', Icon: BarChart3 },
-    { name: 'Resources', path: '/resources', Icon: GraduationCap },
+    { name: 'Overview', path: '/', Icon: Home },
+    { name: 'Calculator', path: '/#calculator', Icon: Calculator },
+    { name: 'Points Breakdown', path: '/dashboard', Icon: LayoutDashboard },
+    { name: 'Badges Tracker', path: '/#badges', Icon: Layers },
+    { name: 'Milestones', path: '/milestones', Icon: Award },
+    { name: 'Resources', path: '/resources', Icon: BookOpen },
     { name: 'Settings', path: '/settings', Icon: Settings },
   ];
 
@@ -20,11 +20,11 @@ export const Sidebar = ({ isOpen, onClose }) => {
     links.push({ name: 'Admin Console', path: '/admin', Icon: ShieldAlert });
   }
 
-  const activeStyle = 'bg-indigo-500/10 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 border-r-4 border-indigo-500 font-semibold';
-  const inactiveStyle = 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900/60';
+  const activeStyle = 'bg-blue-500/10 text-blue-400 border-r-4 border-blue-500 font-bold';
+  const inactiveStyle = 'text-slate-400 hover:bg-[#0b1f33]/60 hover:text-slate-200';
 
   const menuItems = (
-    <nav className="flex-1 space-y-1 px-3 py-6">
+    <nav className="flex-1 space-y-1.5 px-3 py-6">
       {links.map((link) => {
         const { Icon } = link;
         return (
@@ -39,10 +39,10 @@ export const Sidebar = ({ isOpen, onClose }) => {
             }
           >
             <div className="flex items-center gap-3">
-              <Icon className="w-4.5 h-4.5 flex-shrink-0" />
+              <Icon className="w-4 h-4 text-blue-400 shrink-0" />
               <span>{link.name}</span>
             </div>
-            <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <ChevronRight className="w-3.5 h-3.5 opacity-50" />
           </NavLink>
         );
       })}
@@ -55,22 +55,22 @@ export const Sidebar = ({ isOpen, onClose }) => {
       {isOpen && (
         <div
           onClick={onClose}
-          className="fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-sm lg:hidden transition-all duration-300"
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden transition-all duration-300"
         />
       )}
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 flex w-64 flex-col bg-white dark:bg-slate-950 border-r border-slate-200/80 dark:border-slate-900/80 transition-transform duration-300 lg:sticky lg:top-16 lg:z-30 lg:h-[calc(100vh-4rem)] lg:translate-x-0 ${
+        className={`fixed top-0 bottom-0 left-0 z-50 flex w-64 flex-col bg-[#050b14] border-r border-[#123a63]/50 transition-transform duration-300 lg:sticky lg:top-16 lg:z-30 lg:h-[calc(100vh-4rem)] lg:translate-x-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* Mobile Header */}
-        <div className="flex h-16 items-center justify-between border-b border-slate-200 dark:border-slate-850 px-6 lg:hidden">
-          <span className="text-xs font-extrabold uppercase tracking-wider text-slate-450 dark:text-slate-400">Navigation</span>
+        <div className="flex h-16 items-center justify-between border-b border-[#123a63]/50 px-6 lg:hidden">
+          <span className="text-xs font-extrabold uppercase tracking-wider text-blue-400">Navigation</span>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-500 transition-colors"
+            className="p-1 rounded-lg hover:bg-[#0b1f33] text-slate-400 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -79,12 +79,14 @@ export const Sidebar = ({ isOpen, onClose }) => {
         {/* Menu List */}
         {menuItems}
 
-        {/* Premium Brand Footer */}
-        <div className="p-4 border-t border-slate-200 dark:border-slate-900">
-          <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-500/5 to-purple-500/5 border border-indigo-500/10 text-center">
-            <h4 className="text-[10px] font-extrabold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">CloudArc Pro</h4>
-            <p className="text-[9px] mt-1 text-slate-500 dark:text-slate-400 leading-normal">
-              SaaS dashboard tracking system. Verify user profile metrics and milestone records.
+        {/* Community Tool Footer Label */}
+        <div className="p-4 border-t border-[#123a63]/50">
+          <div className="p-3.5 rounded-2xl bg-[#0b1f33]/60 border border-[#123a63] text-center space-y-1">
+            <h4 className="text-[10px] font-extrabold uppercase tracking-wider text-blue-400">
+              Google Cloud Arcade
+            </h4>
+            <p className="text-[9px] text-slate-400 font-medium leading-relaxed">
+              Unofficial Community Points Calculator & Milestone Progress Tracker.
             </p>
           </div>
         </div>
@@ -92,4 +94,5 @@ export const Sidebar = ({ isOpen, onClose }) => {
     </>
   );
 };
+
 export default Sidebar;

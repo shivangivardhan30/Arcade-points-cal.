@@ -1,15 +1,15 @@
 import React from 'react';
-import { Compass, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Compass, ArrowRight } from 'lucide-react';
 
 export const NextActions = ({ metrics }) => {
   if (!metrics || !metrics.nextActions || metrics.nextActions.length === 0) return null;
 
   return (
-    <div className="glass-card p-6 border border-slate-200/80 dark:border-slate-800 rounded-3xl space-y-4 hover-lift glow-card">
-      <div className="flex items-center gap-2 pb-3 border-b border-slate-200/60 dark:border-slate-800">
-        <Compass className="w-5 h-5 text-indigo-500" />
-        <h3 className="text-sm font-extrabold uppercase tracking-wider text-slate-800 dark:text-white">
-          What should I do next?
+    <div className="glass-card p-6 border border-[#123a63] bg-[#07111f]/90 rounded-3xl space-y-4 hover-lift glow-card">
+      <div className="flex items-center gap-2 pb-3 border-b border-[#123a63]/50">
+        <Compass className="w-5 h-5 text-blue-400" />
+        <h3 className="text-sm font-extrabold uppercase tracking-wider text-white">
+          WHAT SHOULD I DO NEXT?
         </h3>
       </div>
 
@@ -17,16 +17,16 @@ export const NextActions = ({ metrics }) => {
         {metrics.nextActions.map((action, idx) => (
           <div
             key={idx}
-            className="p-4 rounded-2xl bg-white/80 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 flex items-start gap-3 hover:border-indigo-500/30 transition-colors"
+            className="p-4 rounded-2xl bg-[#0b1f33] border border-[#123a63] flex items-start gap-3 hover:border-blue-500/40 transition-colors"
           >
-            <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-500 shrink-0 mt-0.5">
+            <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400 shrink-0 mt-0.5 border border-blue-500/20">
               <ArrowRight className="w-4 h-4" />
             </div>
             <div className="space-y-1">
-              <h4 className="text-xs font-extrabold text-slate-800 dark:text-slate-200">
+              <h4 className="text-xs font-extrabold text-slate-200">
                 {action.title}
               </h4>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+              <p className="text-[11px] text-slate-400 font-medium leading-relaxed">
                 {action.description}
               </p>
             </div>
@@ -36,3 +36,5 @@ export const NextActions = ({ metrics }) => {
     </div>
   );
 };
+
+export default NextActions;

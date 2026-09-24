@@ -21,28 +21,28 @@ export const SummaryCards = ({ metrics }) => {
       value: gameBadgesCount,
       subValue: `+${gamePoints} Points`,
       Icon: Gamepad2,
-      color: 'text-amber-500 bg-amber-500/10 border-amber-500/20'
+      color: 'text-amber-400 bg-amber-500/10 border-amber-500/20'
     },
     {
       title: 'SKILL BADGES',
       value: skillBadgesCount,
       subValue: `+${skillPoints} Points`,
       Icon: Award,
-      color: 'text-blue-500 bg-blue-500/10 border-blue-500/20'
+      color: 'text-blue-400 bg-blue-500/10 border-blue-500/20'
     },
     {
       title: 'BONUS',
-      value: bonusPoints,
+      value: bonusPoints > 0 ? `+${bonusPoints}` : '0',
       subValue: 'Facilitator Bonus',
       Icon: Star,
-      color: 'text-purple-500 bg-purple-500/10 border-purple-500/20'
+      color: 'text-purple-400 bg-purple-500/10 border-purple-500/20'
     },
     {
       title: 'CURRENT TIER',
       value: currentTier.name,
-      subValue: `${totalPoints} Points`,
+      subValue: `${totalPoints} Points Total`,
       Icon: Trophy,
-      color: 'text-indigo-500 bg-indigo-500/10 border-indigo-500/20'
+      color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
     }
   ];
 
@@ -56,7 +56,7 @@ export const SummaryCards = ({ metrics }) => {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.08 }}
-            className="glass-card p-5 hover-lift glow-card border border-slate-200/80 dark:border-slate-800 rounded-3xl space-y-3 flex flex-col justify-between"
+            className="glass-card p-5 hover-lift glow-card border border-[#123a63] bg-[#07111f]/90 rounded-3xl space-y-3 flex flex-col justify-between"
           >
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
@@ -68,10 +68,10 @@ export const SummaryCards = ({ metrics }) => {
             </div>
 
             <div className="space-y-1">
-              <div className="text-2xl font-black text-slate-900 dark:text-white font-heading">
+              <div className="text-2xl font-black text-white font-heading truncate">
                 {c.value}
               </div>
-              <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 block">
+              <span className="text-xs font-bold text-blue-400 block">
                 {c.subValue}
               </span>
             </div>
@@ -81,3 +81,5 @@ export const SummaryCards = ({ metrics }) => {
     </div>
   );
 };
+
+export default SummaryCards;

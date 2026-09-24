@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import { Activity, Sun, Moon, Menu, X, Compass, HelpCircle, Info, Calculator, Home } from 'lucide-react';
+import { Cloud, Sun, Moon, Menu, X, Compass, HelpCircle, Calculator, Home, Award, BookOpen, Layers } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 
-export const Navbar = ({ onNavigate }) => {
+export const Navbar = () => {
   const { darkMode, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
     { label: 'Home', href: '#home', Icon: Home },
     { label: 'Calculator', href: '#calculator', Icon: Calculator },
-    { label: 'How It Works', href: '#how-it-works', Icon: Compass },
-    { label: 'FAQ', href: '#faq', Icon: HelpCircle },
-    { label: 'About', href: '#about', Icon: Info }
+    { label: 'Progress', href: '#progress', Icon: Layers },
+    { label: 'Milestones', href: '#milestones', Icon: Award },
+    { label: 'Resources', href: '#resources', Icon: BookOpen },
+    { label: 'FAQ', href: '#faq', Icon: HelpCircle }
   ];
 
   const handleLinkClick = (href) => {
@@ -23,27 +24,43 @@ export const Navbar = ({ onNavigate }) => {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-900/80 transition-colors duration-300">
+    <header className="sticky top-0 z-40 w-full bg-[#050b14]/90 backdrop-blur-xl border-b border-[#123a63]/50 transition-colors duration-300">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6 max-w-7xl mx-auto">
         
-        {/* Brand Title */}
-        <a href="#home" onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }} className="flex items-center gap-2.5 font-heading">
-          <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-brand text-white shadow">
-            <Activity className="w-4.5 h-4.5" />
-          </div>
-          <span className="text-base tracking-tight font-black text-slate-900 dark:text-white">
-            Points<span className="text-indigo-600 dark:text-indigo-400">Calculator</span>
+        {/* Brand Title & Unofficial Tag */}
+        <div className="flex items-center gap-3">
+          <a
+            href="#home"
+            onClick={(e) => { e.preventDefault(); handleLinkClick('#home'); }}
+            className="flex items-center gap-2.5 font-heading group"
+          >
+            <div className="flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 text-white shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform">
+              <Cloud className="w-4.5 h-4.5 text-blue-100" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm sm:text-base tracking-tight font-black text-white">
+                Arcade <span className="text-blue-400">Points Calculator</span>
+              </span>
+              <span className="text-[9px] font-bold text-slate-400 tracking-wider hidden sm:block">
+                Google Cloud Arcade • Unofficial Tool
+              </span>
+            </div>
+          </a>
+
+          {/* UNOFFICIAL COMMUNITY TOOL Label */}
+          <span className="hidden lg:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full border border-blue-500/20 bg-blue-500/10 text-[10px] font-extrabold uppercase tracking-wider text-blue-400">
+            UNOFFICIAL COMMUNITY TOOL
           </span>
-        </a>
+        </div>
 
         {/* Desktop Nav Links */}
-        <nav className="hidden md:flex items-center gap-6 text-xs font-extrabold text-slate-600 dark:text-slate-300">
+        <nav className="hidden md:flex items-center gap-5 text-xs font-bold text-slate-300">
           {navLinks.map((link, idx) => (
             <a
               key={idx}
               href={link.href}
               onClick={(e) => { e.preventDefault(); handleLinkClick(link.href); }}
-              className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+              className="hover:text-blue-400 transition-colors py-1"
             >
               {link.label}
             </a>
@@ -56,16 +73,16 @@ export const Navbar = ({ onNavigate }) => {
           {/* Theme Mode Toggle */}
           <button
             onClick={toggleTheme}
-            className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors"
+            className="p-2.5 rounded-xl bg-[#0b1f33] hover:bg-[#123a63] border border-[#123a63] text-slate-300 transition-colors"
             aria-label="Toggle theme"
           >
-            {darkMode ? <Sun className="w-4 h-4 text-amber-500" /> : <Moon className="w-4 h-4 text-indigo-600" />}
+            {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-blue-400" />}
           </button>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 md:hidden transition-colors"
+            className="p-2.5 rounded-xl bg-[#0b1f33] hover:bg-[#123a63] border border-[#123a63] text-slate-300 md:hidden transition-colors"
             aria-label="Toggle mobile menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -77,7 +94,12 @@ export const Navbar = ({ onNavigate }) => {
 
       {/* Mobile Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md px-4 py-4 space-y-2 text-xs font-bold animate-fade-in">
+        <div className="md:hidden border-b border-[#123a63] bg-[#050b14]/95 backdrop-blur-xl px-4 py-4 space-y-2 text-xs font-bold">
+          <div className="px-3 py-1 mb-2">
+            <span className="inline-block px-2 py-0.5 rounded text-[9px] font-extrabold uppercase tracking-wider text-blue-400 bg-blue-500/10 border border-blue-500/20">
+              UNOFFICIAL COMMUNITY TOOL
+            </span>
+          </div>
           {navLinks.map((link, idx) => {
             const { Icon } = link;
             return (
@@ -85,9 +107,9 @@ export const Navbar = ({ onNavigate }) => {
                 key={idx}
                 href={link.href}
                 onClick={(e) => { e.preventDefault(); handleLinkClick(link.href); }}
-                className="flex items-center gap-2.5 p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-200 transition-colors"
+                className="flex items-center gap-2.5 p-3 rounded-xl hover:bg-[#0b1f33] text-slate-200 transition-colors"
               >
-                <Icon className="w-4 h-4 text-indigo-500" />
+                <Icon className="w-4 h-4 text-blue-400" />
                 <span>{link.label}</span>
               </a>
             );
@@ -97,3 +119,5 @@ export const Navbar = ({ onNavigate }) => {
     </header>
   );
 };
+
+export default Navbar;

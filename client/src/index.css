@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,11 +7,14 @@
 @layer base {
   body {
     font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
-    @apply bg-slate-50 text-slate-900 transition-colors duration-300 antialiased selection:bg-indigo-500 selection:text-white;
+    background-color: #000000;
+    color: #f1f5f9;
+    @apply transition-colors duration-300 antialiased selection:bg-blue-600 selection:text-white;
   }
 
   body.dark {
-    @apply bg-slate-950 text-slate-100;
+    background-color: #000000;
+    color: #f1f5f9;
   }
 }
 
@@ -21,41 +24,49 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #050b14;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-200 dark:bg-slate-900 rounded-full transition-all;
+  background: #0b1f33;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-indigo-500 dark:bg-indigo-900;
+  background: #123a63;
 }
 
-/* Grid & Mesh Overlays */
+/* Google Cloud Tech Grid Overlay */
 .bg-mesh-grid {
-  background-size: 30px 30px;
+  background-size: 32px 32px;
   background-image: 
-    linear-gradient(to right, rgba(99, 102, 241, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(99, 102, 241, 0.04) 1px, transparent 1px);
+    linear-gradient(to right, rgba(66, 133, 244, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(66, 133, 244, 0.05) 1px, transparent 1px);
 }
 
-.dark .bg-mesh-grid {
-  background-image: 
-    linear-gradient(to right, rgba(99, 102, 241, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
-}
-
-/* Glassmorphism components */
+/* Black + Dark Blue Glassmorphism Components */
 .glass-panel {
-  @apply bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-900/50;
+  background: rgba(5, 11, 20, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(18, 58, 99, 0.5);
 }
 
 .glass-card {
-  @apply bg-white/70 dark:bg-slate-900/40 backdrop-blur-md border border-slate-200/60 dark:border-slate-800/60 shadow-sm rounded-2xl transition-all duration-300;
+  background: rgba(7, 17, 31, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(18, 58, 99, 0.6);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+  border-radius: 1.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Custom premium hover actions */
+/* Custom Google Cloud Glow and Hover effects */
 .hover-lift {
-  @apply hover:-translate-y-1 hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700/80 transition-all duration-300;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.hover-lift:hover {
+  transform: translateY(-3px);
+  border-color: rgba(66, 133, 244, 0.5);
+  box-shadow: 0 10px 30px -5px rgba(5, 11, 20, 0.9), 0 0 15px rgba(66, 133, 244, 0.15);
 }
 
 .glow-card {
@@ -67,7 +78,7 @@
   inset: -1px;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(168, 85, 247, 0.15) 100%);
+  background: linear-gradient(135deg, rgba(66, 133, 244, 0.25) 0%, rgba(18, 58, 99, 0.1) 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -75,61 +86,69 @@
   transition: opacity 0.3s ease;
 }
 .glow-card:hover::after {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.35) 0%, rgba(168, 85, 247, 0.35) 100%);
+  background: linear-gradient(135deg, rgba(66, 133, 244, 0.5) 0%, rgba(52, 168, 83, 0.3) 100%);
 }
 
-/* Brand linear colors */
+/* Google Brand Linear Colors */
 .bg-gradient-brand {
-  background: linear-gradient(135deg, #2563eb 0%, #6366f1 50%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #1a73e8 0%, #4285f4 50%, #174ea6 100%);
 }
 
 .text-gradient-brand {
-  background: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #a855f7 100%);
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #93c5fd 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* Form controls */
+.text-google-blue { color: #4285f4; }
+.text-google-red { color: #ea4335; }
+.text-google-yellow { color: #fbbc04; }
+.text-google-green { color: #34a853; }
+
+.bg-google-blue-10 { background-color: rgba(66, 133, 244, 0.1); }
+.border-google-blue-20 { border-color: rgba(66, 133, 244, 0.2); }
+
+/* Inputs */
 .brand-input {
-  @apply w-full px-4 py-3 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all text-xs font-semibold shadow-sm;
+  width: 100%;
+  padding: 0.875rem 1.25rem;
+  background-color: rgba(11, 31, 51, 0.7);
+  border: 1px solid rgba(18, 58, 99, 0.8);
+  border-radius: 0.875rem;
+  color: #f8fafc;
+  outline: none;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.brand-input:focus {
+  border-color: #4285f4;
+  box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2);
 }
 
 .glass-input {
-  @apply w-full px-4 py-3 bg-white/40 dark:bg-slate-900/20 border border-slate-200/50 dark:border-slate-800/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all backdrop-blur-sm text-xs font-semibold;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: rgba(7, 17, 31, 0.5);
+  border: 1px solid rgba(18, 58, 99, 0.6);
+  border-radius: 0.75rem;
+  color: #f8fafc;
+  outline: none;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+}
+.glass-input:focus {
+  border-color: #4285f4;
+  box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
 }
 
-/* Floating animation blobs */
-@keyframes float-slow {
-  0% { transform: translate(0px, 0px) scale(1); }
-  33% { transform: translate(35px, -60px) scale(1.15); }
-  66% { transform: translate(-25px, 25px) scale(0.9); }
-  100% { transform: translate(0px, 0px) scale(1); }
-}
-
-@keyframes float-medium {
-  0% { transform: translate(0px, 0px) scale(1); }
-  50% { transform: translate(-45px, 35px) scale(1.08); }
-  100% { transform: translate(0px, 0px) scale(1); }
-}
-
-.animate-blob-1 {
-  animation: float-slow 22s infinite ease-in-out;
-}
-
-.animate-blob-2 {
-  animation: float-medium 28s infinite ease-in-out;
-}
-
-.animate-blob-3 {
-  animation: float-slow 19s infinite ease-in-out;
-}
-
-/* Custom premium pulse buttons */
+/* Custom pulse glow */
 .btn-glow {
   position: relative;
   transition: all 0.3s ease;
 }
 .btn-glow:hover {
-  box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
-  transform: translateY(-0.5px);
+  box-shadow: 0 0 20px rgba(66, 133, 244, 0.4);
+  transform: translateY(-1px);
 }
+

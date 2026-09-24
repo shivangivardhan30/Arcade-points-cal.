@@ -21,7 +21,9 @@ const scrapeProfile = async (req, res) => {
       const mockGameBadges = 4;
       const mockTriviaBadges = 3;
       const mockQuests = 6;
-      const totalPoints = (mockSkillBadges * 0.5) + (mockGameBadges * 1) + (mockTriviaBadges * 1) + (mockQuests * 1);
+      // Trivia badges are Game Badges in Arcade (1 pt each)
+      const totalGameBadges = mockGameBadges + mockTriviaBadges;
+      const totalPoints = (mockSkillBadges * 0.5) + (totalGameBadges * 1);
 
       return res.json({
         success: true,
@@ -32,22 +34,21 @@ const scrapeProfile = async (req, res) => {
         labsCount: mockQuests,
         badgesCount: mockSkillBadges,
         skillBadgesCount: mockSkillBadges,
-        gameBadgesCount: mockGameBadges,
+        gameBadgesCount: totalGameBadges,
         triviaBadgesCount: mockTriviaBadges,
         totalPoints,
         swagTier: totalPoints >= 45 ? 'Champion Swag Tier' : totalPoints >= 25 ? 'Premium Swag Tier' : totalPoints >= 10 ? 'Standard Swag Tier' : 'Novice Learner',
         badges: [
           { title: 'Google Cloud Essentials (Quest)', type: 'lab', category: 'Quest' },
-          { title: 'Create and Manage Cloud Resources', type: 'badge', category: 'Skill Badge' },
-          { title: 'Perform Foundational Infrastructure Tasks in Google Cloud', type: 'badge', category: 'Skill Badge' },
+          { title: 'Create and Manage Cloud Resources', type: 'badge', category: 'Skill Badge', earnedDate: 'May 10, 2024' },
+          { title: 'Perform Foundational Infrastructure Tasks in Google Cloud', type: 'badge', category: 'Skill Badge', earnedDate: 'Jun 02, 2024' },
           { title: 'Baseline: Infrastructure', type: 'lab', category: 'Quest' },
-          { title: 'Arcade Trivia July 2026', type: 'badge', category: 'Trivia Badge' },
-          { title: 'Level 1: Cloud Architecture Game', type: 'badge', category: 'Game Badge' },
-          { title: 'Build and Secure Networks in Google Cloud', type: 'badge', category: 'Skill Badge' },
-          { title: 'Automate Data Tasks on Google Cloud', type: 'badge', category: 'Skill Badge' },
-          { title: 'Deploy and Manage Cloud Applications', type: 'badge', category: 'Skill Badge' },
-          { title: 'Kubernetes in Google Cloud', type: 'lab', category: 'Quest' },
-          { title: 'Engineer Data in Google Cloud', type: 'badge', category: 'Skill Badge' }
+          { title: 'Arcade Trivia July 2026', type: 'badge', category: 'Game Badge', earnedDate: 'Jul 15, 2026' },
+          { title: 'Level 1: Cloud Architecture Game', type: 'badge', category: 'Game Badge', earnedDate: 'Aug 01, 2026' },
+          { title: 'Build and Secure Networks in Google Cloud', type: 'badge', category: 'Skill Badge', earnedDate: 'Aug 12, 2026' },
+          { title: 'Automate Data Tasks on Google Cloud', type: 'badge', category: 'Skill Badge', earnedDate: 'Aug 20, 2026' },
+          { title: 'Deploy and Manage Cloud Applications', type: 'badge', category: 'Skill Badge', earnedDate: 'Sep 05, 2026' },
+          { title: 'Engineer Data in Google Cloud', type: 'badge', category: 'Skill Badge', earnedDate: 'Sep 18, 2026' }
         ]
       });
     }
@@ -56,23 +57,34 @@ const scrapeProfile = async (req, res) => {
     try {
       const response = await fetch(profileUrl, {
         headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+          'Accept-Language': 'en-US,en;q=0.9',
+          'Cache-Control': 'no-cache',
+          'Sec-Ch-Ua': '"Chromium";v="124", "Google Chrome";v="124"',
+          'Sec-Ch-Ua-Mobile': '?0',
+          'Sec-Ch-Ua-Platform': '"Windows"',
+          'Sec-Fetch-Dest': 'document',
+          'Sec-Fetch-Mode': 'navigate',
+          'Sec-Fetch-Site': 'none',
+          'Sec-Fetch-User': '?1',
+          'Upgrade-Insecure-Requests': '1'
         }
       });
 
       if (!response.ok) {
         if (response.status === 403) {
           return res.status(403).json({
-            message: 'Google Request Blocked: Google Cloud Skills Boost returned 403 Forbidden. Please verify profile public visibility or try using "mock".'
+            message: 'Google Cloud Skills Boost returned 403 Forbidden. Please ensure your profile is public in Skills Boost account settings or test with "mock".'
           });
         }
         if (response.status === 404) {
           return res.status(404).json({
-            message: 'Profile Not Found: The link returned 404 Not Found. Please check your unique profile ID URL.'
+            message: 'Profile Not Found: The profile link returned 404. Please check your unique public profile URL.'
           });
         }
         return res.status(response.status).json({ 
-          message: `Google Request Failed: HTTP ${response.status}. Verify profile link is public.` 
+          message: `Google Skills Boost request failed: HTTP ${response.status}. Verify your profile is set to public.` 
         });
       }
 
@@ -103,29 +115,43 @@ const scrapeProfile = async (req, res) => {
       let triviaBadgesCount = 0;
       let questsCount = 0;
 
-      const badgeContainers = $('.profile-badge, .badge, div[class*="badge"], .public-profile-badge');
+      const badgeContainers = $('.profile-badge, .public-profile-badge, .badge-item, div[class*="badge"]');
 
       if (badgeContainers.length > 0) {
         badgeContainers.each((idx, el) => {
           const badgeText = $(el).find('.ql-subheading-1, .ql-body-2, .public-profile-badge__name, span, p').first().text().trim() || 
                             $(el).text().trim();
           
-          if (badgeText && !badges.some(b => b.title === badgeText)) {
+          const dateText = $(el).find('.public-profile-badge__date, .ql-caption-1, span:contains("Earned"), span:contains("20")').text().trim() || null;
+
+          if (badgeText && badgeText.length > 2 && !badges.some(b => b.title === badgeText)) {
             const lowerText = badgeText.toLowerCase();
             const imgSrc = $(el).find('img').attr('src')?.toLowerCase() || '';
 
             let category = 'Quest';
             let type = 'lab';
 
-            if (lowerText.includes('trivia')) {
-              category = 'Trivia Badge';
-              type = 'badge';
-              triviaBadgesCount++;
-            } else if (lowerText.includes('level') || lowerText.includes('game') || lowerText.includes('monitored')) {
+            // Arcade Game Badges (1 Arcade Point each) include: Level, Trivia, Game, Monitored, Speed Run, Basecamp, Challenge
+            const isGameBadge = lowerText.includes('trivia') || 
+                                lowerText.includes('level') || 
+                                lowerText.includes('game') || 
+                                lowerText.includes('monitored') || 
+                                lowerText.includes('speed run') || 
+                                lowerText.includes('basecamp') || 
+                                lowerText.includes('arcade') ||
+                                lowerText.includes('challenge');
+
+            const isSkillBadge = lowerText.includes('skill badge') || 
+                                 imgSrc.includes('skill_badge') || 
+                                 imgSrc.includes('skill-badge') || 
+                                 imgSrc.includes('skillbadges');
+
+            if (isGameBadge) {
               category = 'Game Badge';
               type = 'badge';
               gameBadgesCount++;
-            } else if (lowerText.includes('skill badge') || imgSrc.includes('skill_badge')) {
+              if (lowerText.includes('trivia')) triviaBadgesCount++;
+            } else if (isSkillBadge) {
               category = 'Skill Badge';
               type = 'badge';
               skillBadgesCount++;
@@ -138,27 +164,28 @@ const scrapeProfile = async (req, res) => {
             badges.push({
               title: badgeText,
               type,
-              category
+              category,
+              earnedDate: dateText
             });
           }
         });
       } else {
         $('span[class*="ql-subheading"], span[class*="ql-body"], p[class*="ql-body"]').each((idx, el) => {
           const text = $(el).text().trim();
-          if (text.length > 5 && text.length < 100 && (text.includes('Quest') || text.includes('Badge') || text.includes('Course') || text.includes('Trivia'))) {
+          if (text.length > 5 && text.length < 120) {
             const lowerText = text.toLowerCase();
             let category = 'Quest';
             let type = 'lab';
 
-            if (lowerText.includes('trivia')) {
-              category = 'Trivia Badge';
-              type = 'badge';
-              triviaBadgesCount++;
-            } else if (lowerText.includes('level') || lowerText.includes('game')) {
+            const isGameBadge = lowerText.includes('trivia') || lowerText.includes('level') || lowerText.includes('game') || lowerText.includes('monitored') || lowerText.includes('arcade');
+            const isSkillBadge = lowerText.includes('skill badge');
+
+            if (isGameBadge) {
               category = 'Game Badge';
               type = 'badge';
               gameBadgesCount++;
-            } else if (lowerText.includes('skill badge')) {
+              if (lowerText.includes('trivia')) triviaBadgesCount++;
+            } else if (isSkillBadge) {
               category = 'Skill Badge';
               type = 'badge';
               skillBadgesCount++;
@@ -175,7 +202,8 @@ const scrapeProfile = async (req, res) => {
         });
       }
 
-      const totalPoints = (skillBadgesCount * 0.5) + (gameBadgesCount * 1) + (triviaBadgesCount * 1) + (questsCount * 1);
+      // Calculation formula: Game Badges (1 pt) + Skill Badges (0.5 pt)
+      const totalPoints = (skillBadgesCount * 0.5) + (gameBadgesCount * 1);
 
       let swagTier = 'Novice Learner';
       if (totalPoints >= 45) swagTier = 'Champion Swag Tier';
@@ -201,7 +229,7 @@ const scrapeProfile = async (req, res) => {
     } catch (fetchErr) {
       console.error('Fetch error during scraping:', fetchErr);
       res.status(500).json({ 
-        message: `Scraping error: Unable to connect to Google Skills Boost. Details: ${fetchErr.message}` 
+        message: `Unable to connect to Google Cloud Skills Boost. Details: ${fetchErr.message}` 
       });
     }
 
@@ -213,3 +241,4 @@ const scrapeProfile = async (req, res) => {
 module.exports = {
   scrapeProfile
 };
+

@@ -13,8 +13,41 @@ import { FACILITATOR_MILESTONES, BONUS_TASK_RULE } from '../config/facilitatorRu
 export const calculateArcadeMetrics = (profile) => {
   if (!profile) return null;
 
-  const gameBadgesCount = Math.max(0, parseInt(profile.gameBadgesCount) || 0);
-  const skillBadgesCount = Math.max(0, parseInt(profile.skillBadgesCount || profile.badgesCount) || 0);
+  let gameBadgesCount = 0;
+  let skillBadgesCount = 0;
+
+  // Calculate directly from badges list if available for 100% accuracy
+  if (Array.isArray(profile.badges) && profile.badges.length > 0) {
+    profile.badges.forEach((b) => {
+      const cat = (b.category || '').toLowerCase();
+      const title = (b.title || '').toLowerCase();
+
+      const isGame = cat.includes('game') || 
+                     cat.includes('trivia') || 
+                     title.includes('level') || 
+                     title.includes('trivia') || 
+                     title.includes('monitored') || 
+                     title.includes('arcade') || 
+                     title.includes('speed run') || 
+                     title.includes('basecamp');
+
+      const isSkill = cat.includes('skill') || title.includes('skill badge');
+
+      if (isGame) {
+        gameBadgesCount++;
+      } else if (isSkill) {
+        skillBadgesCount++;
+      }
+    });
+  } else {
+    // Fallback to provided numeric counts if badges array isn't populated
+    const rawGame = parseInt(profile.gameBadgesCount) || 0;
+    const rawTrivia = parseInt(profile.triviaBadgesCount) || 0;
+    const rawSkill = parseInt(profile.skillBadgesCount || profile.badgesCount) || 0;
+
+    gameBadgesCount = Math.max(0, rawGame > rawTrivia ? rawGame : rawGame + rawTrivia);
+    skillBadgesCount = Math.max(0, rawSkill);
+  }
 
   // 1. Calculate points from categories
   const gamePoints = gameBadgesCount * POINT_RULES.GAME_BADGE;
@@ -123,7 +156,7 @@ export const calculateArcadeMetrics = (profile) => {
     });
   }
 
-  // 6. Generate Timeline (only include actual badges/milestones with dates if available)
+  // 6. Generate Timeline
   const timelineItems = [];
 
   if (profile.badges && profile.badges.length > 0) {
@@ -133,7 +166,7 @@ export const calculateArcadeMetrics = (profile) => {
           id: idx + 1,
           title: b.title,
           category: b.category || b.type || 'Badge',
-          date: b.earnedDate || null, // Only show date if real date exists
+          date: b.earnedDate || null,
           status: 'Completed'
         });
       }
@@ -179,3 +212,4 @@ export const calculateArcadeMetrics = (profile) => {
     badges: profile.badges || []
   };
 };
+

@@ -29,7 +29,7 @@ const scrapeProfile = async (req, res) => {
         success: true,
         name: 'Google Cloud Champion (Mock Account)',
         profileUrl,
-        avatar: 'https://ui-avatars.com/api/?name=Google%20Cloud%20Champion&background=4285F4&color=fff&bold=true',
+        avatar: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
         memberSince: 'Joined 2024',
         labsCount: mockQuests,
         badgesCount: mockSkillBadges,
@@ -38,8 +38,6 @@ const scrapeProfile = async (req, res) => {
         triviaBadgesCount: mockTriviaBadges,
         totalPoints,
         swagTier: totalPoints >= 45 ? 'Champion Swag Tier' : totalPoints >= 25 ? 'Premium Swag Tier' : totalPoints >= 10 ? 'Standard Swag Tier' : 'Novice Learner',
-        lowConfidence: false,
-        warning: null,
         badges: [
           { title: 'Google Cloud Essentials (Quest)', type: 'lab', category: 'Quest' },
           { title: 'Create and Manage Cloud Resources', type: 'badge', category: 'Skill Badge', earnedDate: 'May 10, 2024' },
@@ -101,27 +99,10 @@ const scrapeProfile = async (req, res) => {
                  
       name = name.replace(/\s+/g, ' ');
 
-      // Extract Avatar URL (Neutral initials fallback, NO gendered icons)
-      let scrapedAvatar = $('img.public-profile__avatar').attr('src') || 
-                          $('.profile-avatar img').attr('src') || 
-                          $('.public-profile-header img').attr('src') || 
-                          $('img[src*="googleusercontent"]').attr('src') ||
-                          $('img[src*="qwiklabs.com/avatar"]').attr('src') ||
-                          $('img.avatar').attr('src') ||
-                          '';
-
-      let avatar = '';
-      if (
-        scrapedAvatar && 
-        !scrapedAvatar.includes('3135715.png') && 
-        !scrapedAvatar.includes('google_cloud_gear') &&
-        (scrapedAvatar.startsWith('http://') || scrapedAvatar.startsWith('https://'))
-      ) {
-        avatar = scrapedAvatar;
-      } else {
-        const encodedName = encodeURIComponent(name || 'Arcade Member');
-        avatar = `https://ui-avatars.com/api/?name=${encodedName}&background=4285F4&color=fff&bold=true`;
-      }
+      // Extract Avatar URL
+      let avatar = $('img.public-profile__avatar').attr('src') || 
+                   $('.profile-avatar img').attr('src') || 
+                   'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
 
       // Extract Member Since
       let memberSince = $('.public-profile__member-since').text().trim() || 
@@ -133,51 +114,44 @@ const scrapeProfile = async (req, res) => {
       let gameBadgesCount = 0;
       let triviaBadgesCount = 0;
       let questsCount = 0;
-      let lowConfidence = false;
-      let warning = null;
+      let usedFallbackParser = false;
 
       const badgeContainers = $('.profile-badge, .public-profile-badge, .badge-item, div[class*="badge"]');
 
       if (badgeContainers.length > 0) {
         badgeContainers.each((idx, el) => {
-          const badgeTitle = $(el).find('.ql-subheading-1, .ql-body-2, .public-profile-badge__name, span, p').first().text().trim() || 
-                             $(el).text().trim();
-          
-          const dateText = $(el).find('.public-profile-badge__date, .ql-caption-1, span:contains("Earned"), span:contains("20")').text().trim() || null;
-          
-          // Requirement 1: Scan full badge container text (title + category label + date)
-          const containerFullText = $(el).text().trim().toLowerCase();
-          const imgSrc = $(el).find('img').attr('src')?.toLowerCase() || '';
-          const imgAlt = $(el).find('img').attr('alt')?.toLowerCase() || '';
+          const $el = $(el);
 
-          if (badgeTitle && badgeTitle.length > 2 && !badges.some(b => b.title === badgeTitle)) {
+          const fullContainerText = $el.text().replace(/\s+/g, ' ').trim();
+
+          const badgeText = $el.find('.ql-subheading-1, .ql-title-medium, .ql-body-2, .public-profile-badge__name, span, p').first().text().trim() ||
+                            fullContainerText.slice(0, 140);
+
+          const dateText = $el.find('.public-profile-badge__date, .ql-caption-1, span:contains("Earned"), span:contains("20")').text().trim() || null;
+
+          if (badgeText && badgeText.length > 2 && !badges.some(b => b.title === badgeText)) {
+            const lowerAll = fullContainerText.toLowerCase();
+            const imgSrc = $el.find('img').attr('src')?.toLowerCase() || '';
+            const imgAlt = $el.find('img').attr('alt')?.toLowerCase() || '';
+
             let category = 'Quest';
             let type = 'lab';
 
-            // Requirement 2: Check isSkillBadge FIRST with unambiguous markers
-            const isSkillBadge = containerFullText.includes('skill badge') || 
-                                 containerFullText.includes('skill-badge') || 
-                                 imgSrc.includes('skill_badge') || 
-                                 imgSrc.includes('skill-badge') || 
-                                 imgSrc.includes('skillbadges') || 
-                                 imgSrc.includes('completion_badge') || 
-                                 imgSrc.includes('badges/skill') || 
-                                 imgAlt.includes('skill badge') || 
-                                 imgAlt.includes('skill-badge');
+            const isSkillBadge = lowerAll.includes('skill badge') ||
+                                 imgSrc.includes('skill_badge') ||
+                                 imgSrc.includes('skill-badge') ||
+                                 imgSrc.includes('skillbadges') ||
+                                 imgAlt.includes('skill badge');
 
-            // Requirement 2: Check isGameBadge SECOND with specific markers (level N regex, trivia, speed run, basecamp)
-            // Removed standalone generic words 'arcade', 'challenge', 'game', 'monitored'
-            const isGameBadge = containerFullText.includes('trivia') || 
-                                /\blevel\s*\d/i.test(containerFullText) || 
-                                containerFullText.includes('speed run') || 
-                                containerFullText.includes('base camp') || 
-                                containerFullText.includes('basecamp') || 
-                                containerFullText.includes('game badge') || 
-                                imgSrc.includes('game_badge') || 
-                                imgSrc.includes('game-badge') || 
-                                imgSrc.includes('trivia') || 
-                                imgAlt.includes('game badge') || 
-                                imgAlt.includes('trivia');
+            const isGameBadge = !isSkillBadge && (
+                                lowerAll.includes('trivia') ||
+                                /\blevel\s*\d/.test(lowerAll) ||
+                                lowerAll.includes('speed run') ||
+                                lowerAll.includes('base camp') ||
+                                lowerAll.includes('basecamp') ||
+                                lowerAll.includes('game badge') ||
+                                imgSrc.includes('game_badge') ||
+                                imgSrc.includes('game-badge'));
 
             if (isSkillBadge) {
               category = 'Skill Badge';
@@ -187,9 +161,7 @@ const scrapeProfile = async (req, res) => {
               category = 'Game Badge';
               type = 'badge';
               gameBadgesCount++;
-              if (containerFullText.includes('trivia') || imgSrc.includes('trivia')) {
-                triviaBadgesCount++;
-              }
+              if (lowerAll.includes('trivia')) triviaBadgesCount++;
             } else {
               category = 'Quest';
               type = 'lab';
@@ -197,7 +169,7 @@ const scrapeProfile = async (req, res) => {
             }
 
             badges.push({
-              title: badgeTitle,
+              title: badgeText,
               type,
               category,
               earnedDate: dateText
@@ -205,10 +177,7 @@ const scrapeProfile = async (req, res) => {
           }
         });
       } else {
-        // Requirement 3: Set lowConfidence = true and warning when fallback loose parser path runs
-        lowConfidence = true;
-        warning = 'Profile layout could not be parsed structurally; badge counts estimated from page text.';
-        console.warn(`[ProfileScraper] Fallback parser triggered for ${profileUrl}. Setting lowConfidence = true.`);
+        usedFallbackParser = true;
 
         $('span[class*="ql-subheading"], span[class*="ql-body"], p[class*="ql-body"]').each((idx, el) => {
           const text = $(el).text().trim();
@@ -217,16 +186,13 @@ const scrapeProfile = async (req, res) => {
             let category = 'Quest';
             let type = 'lab';
 
-            // Same priority: Check isSkillBadge FIRST
-            const isSkillBadge = lowerText.includes('skill badge') || lowerText.includes('skill-badge');
-            
-            // Strict isGameBadge check SECOND
-            const isGameBadge = lowerText.includes('trivia') || 
-                                /\blevel\s*\d/i.test(lowerText) || 
-                                lowerText.includes('speed run') || 
-                                lowerText.includes('base camp') || 
-                                lowerText.includes('basecamp') || 
-                                lowerText.includes('game badge');
+            const isSkillBadge = lowerText.includes('skill badge');
+            const isGameBadge = !isSkillBadge && (
+                                lowerText.includes('trivia') ||
+                                /\blevel\s*\d/.test(lowerText) ||
+                                lowerText.includes('speed run') ||
+                                lowerText.includes('base camp') ||
+                                lowerText.includes('game badge'));
 
             if (isSkillBadge) {
               category = 'Skill Badge';
@@ -250,7 +216,6 @@ const scrapeProfile = async (req, res) => {
         });
       }
 
-      // Calculation formula: Game Badges (1 pt) + Skill Badges (0.5 pt)
       const totalPoints = (skillBadgesCount * 0.5) + (gameBadgesCount * 1);
 
       let swagTier = 'Novice Learner';
@@ -271,9 +236,11 @@ const scrapeProfile = async (req, res) => {
         triviaBadgesCount,
         totalPoints,
         swagTier,
-        lowConfidence,
-        warning,
-        badges
+        badges,
+        lowConfidence: usedFallbackParser,
+        warning: usedFallbackParser
+          ? 'Could not find structured badge data on this profile page; counts were estimated from loose page text and may be inaccurate.'
+          : null
       });
 
     } catch (fetchErr) {
@@ -291,4 +258,3 @@ const scrapeProfile = async (req, res) => {
 module.exports = {
   scrapeProfile
 };
-

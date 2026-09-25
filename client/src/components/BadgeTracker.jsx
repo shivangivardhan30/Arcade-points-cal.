@@ -20,17 +20,17 @@ export const BadgeTracker = ({ metrics }) => {
     : [];
 
   return (
-    <div className="glass-card p-6 border border-[#123a63] bg-[#07111f]/90 rounded-3xl space-y-6 hover-lift glow-card">
+    <div className="app-card p-6 space-y-6 border-t-2 border-t-[#4285F4]">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 pb-4 border-b border-[#123a63]/50">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 pb-4 border-b border-[#1E2A44]">
         <div className="flex items-center gap-2">
-          <Award className="w-5 h-5 text-blue-400" />
+          <Award className="w-5 h-5 text-[#4285F4]" />
           <div>
-            <h3 className="text-sm font-extrabold uppercase tracking-wider text-white">
+            <h3 className="text-sm font-extrabold uppercase tracking-wider text-[#E6EAF2]">
               BADGE OVERVIEW
             </h3>
-            <p className="text-xs text-slate-400 font-medium">
+            <p className="text-xs text-[#94A3B8] font-medium">
               Completed and missing Arcade credentials
             </p>
           </div>
@@ -39,32 +39,32 @@ export const BadgeTracker = ({ metrics }) => {
         {hasBadgesArray && (
           <div className="flex flex-col sm:flex-row gap-2">
             <div className="relative flex items-center">
-              <Search className="absolute left-3 w-3.5 h-3.5 text-slate-400" />
+              <Search className="absolute left-3 w-3.5 h-3.5 text-[#94A3B8]" />
               <input
                 type="text"
                 placeholder="Search badges..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-8 pr-3 py-1.5 bg-[#0b1f33] border border-[#123a63] rounded-xl text-xs font-semibold outline-none text-white focus:border-blue-400"
+                className="pl-8 pr-3 py-1.5 bg-[#0B1220] border border-[#1E2A44] rounded-xl text-xs font-semibold outline-none text-[#E6EAF2] focus:border-[#4285F4]"
               />
             </div>
 
-            <div className="flex items-center gap-1 bg-[#0b1f33] p-1 rounded-xl border border-[#123a63] text-xs font-bold">
+            <div className="flex items-center gap-1 bg-[#0B1220] p-1 rounded-xl border border-[#1E2A44] text-xs font-bold">
               <button
                 onClick={() => setFilter('all')}
-                className={`px-2.5 py-1 rounded-lg transition-all ${filter === 'all' ? 'bg-blue-600 text-white shadow' : 'text-slate-400'}`}
+                className={`px-2.5 py-1 rounded-lg transition-all ${filter === 'all' ? 'bg-[#4285F4] text-white shadow' : 'text-[#94A3B8]'}`}
               >
                 All
               </button>
               <button
                 onClick={() => setFilter('completed')}
-                className={`px-2.5 py-1 rounded-lg transition-all ${filter === 'completed' ? 'bg-blue-600 text-white shadow' : 'text-slate-400'}`}
+                className={`px-2.5 py-1 rounded-lg transition-all ${filter === 'completed' ? 'bg-[#4285F4] text-white shadow' : 'text-[#94A3B8]'}`}
               >
                 Completed
               </button>
               <button
                 onClick={() => setFilter('incomplete')}
-                className={`px-2.5 py-1 rounded-lg transition-all ${filter === 'incomplete' ? 'bg-blue-600 text-white shadow' : 'text-slate-400'}`}
+                className={`px-2.5 py-1 rounded-lg transition-all ${filter === 'incomplete' ? 'bg-[#4285F4] text-white shadow' : 'text-[#94A3B8]'}`}
               >
                 Remaining
               </button>
@@ -78,28 +78,33 @@ export const BadgeTracker = ({ metrics }) => {
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 max-h-80 overflow-y-auto pr-1">
           {filteredBadges.map((badge, idx) => {
             const isCompleted = badge.earned !== false;
+            const isSkill = (badge.category || badge.type || '').toLowerCase().includes('skill');
             return (
               <div
                 key={idx}
                 className={`p-3.5 rounded-xl border flex items-start justify-between gap-3 transition-colors ${
                   isCompleted
-                    ? 'bg-emerald-500/10 border-emerald-500/30 text-white'
-                    : 'bg-[#0b1f33] border-[#123a63] text-slate-400'
+                    ? 'bg-[#34A853]/10 border-[#34A853]/30 text-[#E6EAF2]'
+                    : 'bg-[#EA4335]/10 border-[#EA4335]/20 text-[#94A3B8]'
                 }`}
               >
                 <div className="space-y-1 min-w-0">
-                  <span className="text-[9px] font-extrabold uppercase tracking-wider text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">
+                  <span className={`text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded border ${
+                    isSkill 
+                      ? 'text-[#4285F4] bg-[#4285F4]/10 border-[#4285F4]/20' 
+                      : 'text-[#FBBC04] bg-[#FBBC04]/10 border-[#FBBC04]/20'
+                  }`}>
                     {badge.category || badge.type || 'Badge'}
                   </span>
-                  <h4 className="text-xs font-bold text-slate-200 leading-snug truncate block">
+                  <h4 className="text-xs font-bold text-[#E6EAF2] leading-snug truncate block">
                     {badge.title}
                   </h4>
                 </div>
 
                 {isCompleted ? (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-4 h-4 text-[#34A853] shrink-0 mt-0.5" />
                 ) : (
-                  <Circle className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
+                  <Circle className="w-4 h-4 text-[#EA4335] shrink-0 mt-0.5" />
                 )}
               </div>
             );
@@ -108,20 +113,20 @@ export const BadgeTracker = ({ metrics }) => {
       ) : (
         /* Summary Counts Fallback */
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="p-4 rounded-2xl bg-[#0b1f33] border border-[#123a63] flex items-center justify-between">
+          <div className="p-4 rounded-xl bg-[#0B1220] border border-[#1E2A44] flex items-center justify-between">
             <div>
-              <span className="text-xs font-bold text-slate-400 block">Completed Skill Badges</span>
-              <span className="text-2xl font-black text-white">{skillBadgesCount}</span>
+              <span className="text-xs font-bold text-[#94A3B8] block">Completed Skill Badges</span>
+              <span className="text-2xl font-black text-[#E6EAF2]">{skillBadgesCount}</span>
             </div>
-            <CheckCircle2 className="w-6 h-6 text-blue-400" />
+            <CheckCircle2 className="w-6 h-6 text-[#4285F4]" />
           </div>
 
-          <div className="p-4 rounded-2xl bg-[#0b1f33] border border-[#123a63] flex items-center justify-between">
+          <div className="p-4 rounded-xl bg-[#0B1220] border border-[#1E2A44] flex items-center justify-between">
             <div>
-              <span className="text-xs font-bold text-slate-400 block">Completed Game Badges</span>
-              <span className="text-2xl font-black text-white">{gameBadgesCount}</span>
+              <span className="text-xs font-bold text-[#94A3B8] block">Completed Game Badges</span>
+              <span className="text-2xl font-black text-[#E6EAF2]">{gameBadgesCount}</span>
             </div>
-            <CheckCircle2 className="w-6 h-6 text-amber-400" />
+            <CheckCircle2 className="w-6 h-6 text-[#FBBC04]" />
           </div>
         </div>
       )}

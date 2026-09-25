@@ -18,15 +18,15 @@ export const Resources = () => {
   const getCategoryIcon = (category) => {
     switch (category) {
       case 'lab':
-        return <CheckCircle2 className="w-5 h-5 text-indigo-500" />;
+        return <CheckCircle2 className="w-5 h-5 text-[#34A853]" />;
       case 'path':
-        return <BookOpen className="w-5 h-5 text-blue-500" />;
+        return <BookOpen className="w-5 h-5 text-[#4285F4]" />;
       case 'tips':
-        return <Lightbulb className="w-5 h-5 text-amber-500" />;
+        return <Lightbulb className="w-5 h-5 text-[#FBBC04]" />;
       case 'video':
-        return <Play className="w-5 h-5 text-pink-500" />;
+        return <Play className="w-5 h-5 text-[#4285F4]" />;
       default:
-        return <GraduationCap className="w-5 h-5 text-slate-500" />;
+        return <GraduationCap className="w-5 h-5 text-[#94A3B8]" />;
     }
   };
 
@@ -53,12 +53,12 @@ export const Resources = () => {
       
       {/* Title */}
       <div className="flex items-center gap-3">
-        <div className="p-3 bg-indigo-500/10 dark:bg-indigo-500/20 text-indigo-500 rounded-2xl">
+        <div className="p-3 bg-[#4285F4]/10 text-[#4285F4] border border-[#4285F4]/20 rounded-2xl">
           <GraduationCap className="w-6 h-6" />
         </div>
         <div>
-          <h1 className="text-xl font-bold text-slate-850 dark:text-white">CloudArc Pro Catalog</h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <h1 className="text-xl font-bold text-[#E6EAF2]">CloudArc Pro Catalog</h1>
+          <p className="text-xs text-[#94A3B8]">
             Browse learning tracks, study guides, practical tips, and video resources.
           </p>
         </div>
@@ -69,26 +69,26 @@ export const Resources = () => {
         
         {/* Search */}
         <div className="relative max-w-md">
-          <Search className="absolute left-3.5 top-3 w-4 h-4 text-slate-450" />
+          <Search className="absolute left-3.5 top-3 w-4 h-4 text-[#94A3B8]" />
           <input
             type="text"
             placeholder="Search guides, paths, or tags..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-sm font-semibold"
+            className="w-full pl-10 pr-4 py-2.5 bg-[#0B1220] border border-[#1E2A44] rounded-xl text-xs outline-none focus:border-[#4285F4] transition-all text-[#E6EAF2] placeholder:text-[#94A3B8] font-semibold"
           />
         </div>
 
         {/* Categories Tabs Row */}
-        <div className="flex flex-wrap gap-2 pb-1.5 border-b border-slate-200 dark:border-slate-850">
+        <div className="flex flex-wrap gap-2 pb-1.5 border-b border-[#1E2A44]">
           {tabItems.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-300 ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                 activeTab === tab.id
-                  ? 'bg-gradient-brand text-white shadow-sm'
-                  : 'text-slate-550 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900'
+                  ? 'bg-[#4285F4] text-white shadow'
+                  : 'text-[#94A3B8] hover:bg-[#0B1220] hover:text-[#E6EAF2]'
               }`}
             >
               {tab.label}
@@ -108,31 +108,31 @@ export const Resources = () => {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="glass-card p-6 flex flex-col justify-between hover-lift"
+              className="app-card p-6 flex flex-col justify-between"
             >
               <div className="space-y-3">
                 <div className="flex justify-between items-start">
-                  <div className="p-2.5 bg-slate-100 dark:bg-slate-900 rounded-xl border border-slate-200/50 dark:border-slate-800/50">
+                  <div className="p-2.5 bg-[#0B1220] rounded-xl border border-[#1E2A44]">
                     {getCategoryIcon(res.category)}
                   </div>
                   
-                  <span className="text-[8px] font-extrabold px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-650 dark:text-indigo-400 uppercase tracking-wider">
+                  <span className="text-[8px] font-extrabold px-2 py-0.5 rounded bg-[#4285F4]/10 text-[#4285F4] uppercase tracking-wider">
                     {res.category}
                   </span>
                 </div>
 
-                <h3 className="text-xs font-extrabold text-slate-850 dark:text-white uppercase tracking-wider line-clamp-1">{res.title}</h3>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-normal font-semibold line-clamp-3">
+                <h3 className="text-xs font-extrabold text-[#E6EAF2] uppercase tracking-wider line-clamp-1">{res.title}</h3>
+                <p className="text-[11px] text-[#94A3B8] leading-normal font-semibold line-clamp-3">
                   {res.description}
                 </p>
               </div>
 
-              <div className="pt-4 mt-4 border-t border-slate-200/50 dark:border-slate-850 flex flex-wrap justify-between items-center gap-2">
+              <div className="pt-4 mt-4 border-t border-[#1E2A44] flex flex-wrap justify-between items-center gap-2">
                 <div className="flex flex-wrap gap-1.5">
                   {res.tags.map((tag, idx) => (
                     <span
                       key={idx}
-                      className="text-[8px] font-bold bg-indigo-500/5 text-indigo-500 px-2 py-0.5 rounded-full"
+                      className="text-[8px] font-bold bg-[#4285F4]/10 text-[#4285F4] px-2 py-0.5 rounded-full"
                     >
                       #{tag}
                     </span>
@@ -143,9 +143,9 @@ export const Resources = () => {
                   href={res.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 py-1.5 px-3 bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-850 border border-slate-250 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-extrabold text-[10px] rounded-lg transition-all"
+                  className="flex items-center gap-1.5 py-1.5 px-3 bg-[#0B1220] hover:bg-[#1E2A44] border border-[#1E2A44] text-[#E6EAF2] font-extrabold text-[10px] rounded-lg transition-all"
                 >
-                  View Link <ExternalLink className="w-3 h-3" />
+                  View Link <ExternalLink className="w-3 h-3 text-[#4285F4]" />
                 </a>
               </div>
             </motion.div>

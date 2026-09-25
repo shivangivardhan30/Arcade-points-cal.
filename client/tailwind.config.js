@@ -8,15 +8,22 @@ export default {
   theme: {
     extend: {
       colors: {
+        app: {
+          bg: '#0B1220',
+          surface: '#111A2E',
+          border: '#1E2A44',
+          text: '#E6EAF2',
+          muted: '#94A3B8',
+        },
         google: {
           blue: '#4285F4',
           red: '#EA4335',
-          yellow: '#FBBC05',
+          yellow: '#FBBC04',
           green: '#34A853',
         },
       },
       fontFamily: {
-        sans: ['Product Sans', 'Inter', 'sans-serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
       },
     },
   },

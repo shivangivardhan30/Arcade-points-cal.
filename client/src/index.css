@@ -1,20 +1,27 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg: #0B1220;
+  --surface: #111A2E;
+  --border: #1E2A44;
+  --text: #E6EAF2;
+  --muted: #94A3B8;
+  --google-blue: #4285F4;
+  --google-green: #34A853;
+  --google-yellow: #FBBC04;
+  --google-red: #EA4335;
+}
+
 @layer base {
   body {
-    font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
-    background-color: #000000;
-    color: #f1f5f9;
-    @apply transition-colors duration-300 antialiased selection:bg-blue-600 selection:text-white;
-  }
-
-  body.dark {
-    background-color: #000000;
-    color: #f1f5f9;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    @apply antialiased selection:bg-blue-600 selection:text-white;
   }
 }
 
@@ -24,131 +31,50 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #050b14;
+  background: var(--bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: #0b1f33;
+  background: var(--border);
   border-radius: 9999px;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #123a63;
+  background: var(--google-blue);
 }
 
-/* Google Cloud Tech Grid Overlay */
-.bg-mesh-grid {
-  background-size: 32px 32px;
-  background-image: 
-    linear-gradient(to right, rgba(66, 133, 244, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(66, 133, 244, 0.05) 1px, transparent 1px);
+/* Single Card Style */
+.app-card {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1rem; /* rounded-2xl */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
 }
 
-/* Black + Dark Blue Glassmorphism Components */
-.glass-panel {
-  background: rgba(5, 11, 20, 0.85);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(18, 58, 99, 0.5);
-}
-
-.glass-card {
-  background: rgba(7, 17, 31, 0.75);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(18, 58, 99, 0.6);
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
-  border-radius: 1.5rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Custom Google Cloud Glow and Hover effects */
-.hover-lift {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.hover-lift:hover {
-  transform: translateY(-3px);
-  border-color: rgba(66, 133, 244, 0.5);
-  box-shadow: 0 10px 30px -5px rgba(5, 11, 20, 0.9), 0 0 15px rgba(66, 133, 244, 0.15);
-}
-
-.glow-card {
-  position: relative;
-}
-.glow-card::after {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(135deg, rgba(66, 133, 244, 0.25) 0%, rgba(18, 58, 99, 0.1) 100%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-.glow-card:hover::after {
-  background: linear-gradient(135deg, rgba(66, 133, 244, 0.5) 0%, rgba(52, 168, 83, 0.3) 100%);
-}
-
-/* Google Brand Linear Colors */
-.bg-gradient-brand {
-  background: linear-gradient(135deg, #1a73e8 0%, #4285f4 50%, #174ea6 100%);
-}
-
-.text-gradient-brand {
-  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #93c5fd 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.text-google-blue { color: #4285f4; }
-.text-google-red { color: #ea4335; }
-.text-google-yellow { color: #fbbc04; }
-.text-google-green { color: #34a853; }
-
-.bg-google-blue-10 { background-color: rgba(66, 133, 244, 0.1); }
-.border-google-blue-20 { border-color: rgba(66, 133, 244, 0.2); }
-
-/* Inputs */
+/* Form controls */
 .brand-input {
   width: 100%;
-  padding: 0.875rem 1.25rem;
-  background-color: rgba(11, 31, 51, 0.7);
-  border: 1px solid rgba(18, 58, 99, 0.8);
-  border-radius: 0.875rem;
-  color: #f8fafc;
+  padding: 0.75rem 1rem;
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  color: var(--text);
   outline: none;
-  transition: all 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   font-size: 0.875rem;
   font-weight: 500;
 }
 .brand-input:focus {
-  border-color: #4285f4;
-  box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.2);
-}
-
-.glass-input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  background-color: rgba(7, 17, 31, 0.5);
-  border: 1px solid rgba(18, 58, 99, 0.6);
-  border-radius: 0.75rem;
-  color: #f8fafc;
-  outline: none;
-  transition: all 0.2s ease;
-  font-size: 0.875rem;
-}
-.glass-input:focus {
-  border-color: #4285f4;
+  border-color: var(--google-blue);
   box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
 }
 
-/* Custom pulse glow */
-.btn-glow {
-  position: relative;
-  transition: all 0.3s ease;
+/* Four-segment brand strip under navbar */
+.brand-strip {
+  display: flex;
+  height: 3px;
+  width: 100%;
 }
-.btn-glow:hover {
-  box-shadow: 0 0 20px rgba(66, 133, 244, 0.4);
-  transform: translateY(-1px);
-}
-
+.brand-strip-blue { background-color: #4285F4; flex: 1; }
+.brand-strip-red { background-color: #EA4335; flex: 1; }
+.brand-strip-yellow { background-color: #FBBC04; flex: 1; }
+.brand-strip-green { background-color: #34A853; flex: 1; }

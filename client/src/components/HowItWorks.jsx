@@ -8,31 +8,31 @@ export const HowItWorks = () => {
       title: 'Enter Public Profile URL',
       description: 'Paste your public Google Skills Boost profile URL into the search box above.',
       Icon: Search,
-      color: 'text-blue-400 bg-blue-500/10 border-blue-500/20'
+      color: 'text-[#4285F4] bg-[#4285F4]/10 border-[#4285F4]/20'
     },
     {
       num: '02',
       title: 'Calculate Arcade Progress',
       description: 'Our engine parses earned badges and calculates game points, skill points, and bonuses.',
       Icon: Calculator,
-      color: 'text-purple-400 bg-purple-500/10 border-purple-500/20'
+      color: 'text-[#FBBC04] bg-[#FBBC04]/10 border-[#FBBC04]/20'
     },
     {
       num: '03',
       title: 'View Breakdown & Goals',
       description: 'Review your total score, dynamic tier standing, and next goal milestones.',
       Icon: Trophy,
-      color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
+      color: 'text-[#34A853] bg-[#34A853]/10 border-[#34A853]/20'
     }
   ];
 
   return (
     <div id="progress" className="max-w-5xl mx-auto px-4 py-12 space-y-8">
       <div className="text-center space-y-2 max-w-xl mx-auto">
-        <span className="text-xs font-extrabold uppercase tracking-wider text-blue-400">
+        <span className="text-xs font-extrabold uppercase tracking-wider text-[#4285F4]">
           Simple Process
         </span>
-        <h2 className="text-2xl sm:text-3xl font-black text-white font-heading">
+        <h2 className="text-2xl sm:text-3xl font-black text-[#E6EAF2]">
           How It Works
         </h2>
       </div>
@@ -43,20 +43,20 @@ export const HowItWorks = () => {
           return (
             <div
               key={idx}
-              className="glass-card p-6 border border-[#123a63] bg-[#07111f]/90 rounded-3xl space-y-4 hover-lift glow-card relative"
+              className="app-card p-6 space-y-4 relative"
             >
               <div className="flex items-center justify-between">
-                <div className={`p-3.5 rounded-2xl border ${s.color}`}>
+                <div className={`p-3.5 rounded-xl border ${s.color}`}>
                   <Icon className="w-5 h-5" />
                 </div>
-                <span className="text-xs font-black font-mono text-slate-500">
+                <span className="text-xs font-black font-mono text-[#94A3B8]">
                   {s.num}
                 </span>
               </div>
-              <h3 className="text-sm font-extrabold text-white">
+              <h3 className="text-sm font-extrabold text-[#E6EAF2]">
                 {s.title}
               </h3>
-              <p className="text-xs text-slate-400 font-medium leading-relaxed">
+              <p className="text-xs text-[#94A3B8] font-medium leading-relaxed">
                 {s.description}
               </p>
             </div>

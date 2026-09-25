@@ -6,9 +6,29 @@ import { motion } from 'framer-motion';
 export const Milestones = () => {
   const { config, calculatePoints, getMilestoneReached, getNextMilestoneInfo } = useConfig();
   
+  // Read active profile from localStorage if exists
+  const getSavedProfileCounts = () => {
+    try {
+      const saved = localStorage.getItem('active_arcade_profile');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.metrics) {
+          return {
+            labs: parsed.metrics.gameBadgesCount || 0,
+            badges: parsed.metrics.skillBadgesCount || 0
+          };
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return { labs: 18, badges: 12 };
+  };
+
+  const initialCounts = getSavedProfileCounts();
   // Simulation states
-  const [simLabs, setSimLabs] = useState(18);
-  const [simBadges, setSimBadges] = useState(12);
+  const [simLabs, setSimLabs] = useState(initialCounts.labs);
+  const [simBadges, setSimBadges] = useState(initialCounts.badges);
 
   // Standard Arcade milestones list
   const milestoneList = [
@@ -37,12 +57,12 @@ export const Milestones = () => {
       
       {/* Title */}
       <div className="flex items-center gap-3">
-        <div className="p-3 bg-indigo-500/10 dark:bg-indigo-500/20 text-indigo-500 rounded-2xl">
+        <div className="p-3 bg-[#4285F4]/10 text-[#4285F4] border border-[#4285F4]/20 rounded-2xl">
           <Milestone className="w-6 h-6" />
         </div>
         <div>
-          <h1 className="text-xl font-bold text-slate-850 dark:text-white">Milestones Tracker</h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <h1 className="text-xl font-bold text-[#E6EAF2]">Milestones Tracker</h1>
+          <p className="text-xs text-[#94A3B8]">
             Monitor badge tier requirements, track remaining points, and simulate milestone forecasts.
           </p>
         </div>
@@ -52,8 +72,8 @@ export const Milestones = () => {
         
         {/* Milestones checklists */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="glass-card p-6 hover-lift">
-            <h2 className="text-xs font-extrabold text-slate-850 dark:text-white uppercase tracking-wider mb-5">
+          <div className="app-card p-6">
+            <h2 className="text-xs font-extrabold text-[#E6EAF2] uppercase tracking-wider mb-5">
               Arcade Tier Progression Checklists
             </h2>
 
@@ -63,31 +83,31 @@ export const Milestones = () => {
                 return (
                   <div
                     key={idx}
-                    className={`flex items-start justify-between p-4 rounded-2xl border transition-all duration-300 ${
+                    className={`flex items-start justify-between p-4 rounded-xl border transition-all duration-300 ${
                       isUnlocked
-                        ? 'bg-emerald-500/5 border-emerald-500/20 text-slate-800 dark:text-slate-200'
-                        : 'bg-slate-50 dark:bg-slate-900/30 border-slate-200 dark:border-slate-850 text-slate-550 dark:text-slate-400'
+                        ? 'bg-[#34A853]/10 border-[#34A853]/30 text-[#E6EAF2]'
+                        : 'bg-[#0B1220] border-[#1E2A44] text-[#94A3B8]'
                     }`}
                   >
                     <div className="flex gap-3">
                       <div className="mt-0.5">
                         {isUnlocked ? (
-                          <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                          <CheckCircle2 className="w-5 h-5 text-[#34A853]" />
                         ) : (
-                          <Circle className="w-5 h-5 text-slate-350 dark:text-slate-700" />
+                          <Circle className="w-5 h-5 text-[#94A3B8]" />
                         )}
                       </div>
                       <div className="space-y-0.5 font-bold">
-                        <span className={`text-xs ${isUnlocked ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-600 dark:text-slate-300'}`}>
+                        <span className={`text-xs ${isUnlocked ? 'text-[#34A853]' : 'text-[#E6EAF2]'}`}>
                           {m.name} ({m.pointsRequired} pts)
                         </span>
-                        <p className="text-[10px] text-slate-450 dark:text-slate-500 font-semibold leading-normal">{m.desc}</p>
-                        <p className="text-[9px] text-indigo-500 dark:text-indigo-400 font-bold uppercase tracking-wider mt-1">Est Swag: {m.rewards}</p>
+                        <p className="text-[10px] text-[#94A3B8] font-semibold leading-normal">{m.desc}</p>
+                        <p className="text-[9px] text-[#4285F4] font-bold uppercase tracking-wider mt-1">Est Swag: {m.rewards}</p>
                       </div>
                     </div>
 
                     <span className={`text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md ${
-                      isUnlocked ? 'bg-emerald-500/10 text-emerald-550 dark:text-emerald-400' : 'bg-slate-200 dark:bg-slate-800 text-slate-500'
+                      isUnlocked ? 'bg-[#34A853]/20 text-[#34A853]' : 'bg-[#0B1220] text-[#94A3B8]'
                     }`}>
                       {isUnlocked ? 'Unlocked' : 'Locked'}
                     </span>
@@ -98,15 +118,15 @@ export const Milestones = () => {
           </div>
           
           {/* Mock Interactive points simulator */}
-          <div className="glass-card p-6 hover-lift">
-            <h2 className="text-xs font-extrabold text-slate-850 dark:text-white uppercase tracking-wider mb-4">
+          <div className="app-card p-6">
+            <h2 className="text-xs font-extrabold text-[#E6EAF2] uppercase tracking-wider mb-4">
               Interactive Milestone Simulator
             </h2>
-            <p className="text-[10px] text-slate-400 font-semibold leading-normal mb-5">
+            <p className="text-[10px] text-[#94A3B8] font-semibold leading-normal mb-5">
               Simulate completed labs or badges to inspect how they impact your estimated points and milestone tiers.
             </p>
 
-            <div className="grid gap-4 sm:grid-cols-2 text-xs font-bold text-slate-600 dark:text-slate-400">
+            <div className="grid gap-4 sm:grid-cols-2 text-xs font-bold text-[#94A3B8]">
               <div className="space-y-1.5">
                 <label className="pl-0.5">Simulated Labs / Quests Completed</label>
                 <input
@@ -114,7 +134,7 @@ export const Milestones = () => {
                   min="0"
                   value={simLabs}
                   onChange={(e) => setSimLabs(Math.max(0, parseInt(e.target.value) || 0))}
-                  className="brand-input"
+                  className="w-full px-3 py-2 bg-[#0B1220] border border-[#1E2A44] rounded-xl text-xs font-bold text-[#E6EAF2] outline-none focus:border-[#4285F4]"
                 />
               </div>
               
@@ -125,7 +145,7 @@ export const Milestones = () => {
                   min="0"
                   value={simBadges}
                   onChange={(e) => setSimBadges(Math.max(0, parseInt(e.target.value) || 0))}
-                  className="brand-input"
+                  className="w-full px-3 py-2 bg-[#0B1220] border border-[#1E2A44] rounded-xl text-xs font-bold text-[#E6EAF2] outline-none focus:border-[#4285F4]"
                 />
               </div>
             </div>
@@ -136,74 +156,74 @@ export const Milestones = () => {
         <div className="space-y-6">
           
           {/* Active progress summary */}
-          <div className="glass-card p-6 hover-lift space-y-4">
+          <div className="app-card p-6 space-y-4">
             <div className="space-y-1">
-              <span className="text-[9px] font-extrabold uppercase tracking-wider text-indigo-500 bg-indigo-500/5 px-2.5 py-0.5 rounded-md border border-indigo-500/10">
+              <span className="text-[9px] font-extrabold uppercase tracking-wider text-[#4285F4] bg-[#4285F4]/10 px-2.5 py-0.5 rounded-md border border-[#4285F4]/20">
                 Evaluation Tier
               </span>
-              <h3 className="text-sm font-extrabold text-slate-850 dark:text-white uppercase tracking-wider mt-3">
+              <h3 className="text-sm font-extrabold text-[#E6EAF2] uppercase tracking-wider mt-3">
                 {activeMilestone !== 'None' ? activeMilestone : 'Bronze Candidate'}
               </h3>
-              <p className="text-[10px] text-slate-400 font-semibold">Active simulated points: <span className="font-extrabold text-indigo-550 dark:text-indigo-400">{currentPoints} pts</span></p>
+              <p className="text-[10px] text-[#94A3B8] font-semibold">Active simulated points: <span className="font-extrabold text-[#4285F4]">{currentPoints} pts</span></p>
             </div>
 
             {nextMilestone && nextMilestone.pointsNeeded > 0 ? (
-              <div className="space-y-3 pt-4 border-t border-slate-200/50 dark:border-slate-850">
+              <div className="space-y-3 pt-4 border-t border-[#1E2A44]">
                 <div className="flex justify-between items-center text-xs font-bold">
-                  <span className="text-slate-450 uppercase tracking-wider text-[9px]">Progress to {nextMilestone.name}</span>
-                  <span className="text-indigo-650 dark:text-indigo-400">{nextMilestone.progress}%</span>
+                  <span className="text-[#94A3B8] uppercase tracking-wider text-[9px]">Progress to {nextMilestone.name}</span>
+                  <span className="text-[#4285F4]">{nextMilestone.progress}%</span>
                 </div>
                 
-                <div className="w-full bg-slate-100 dark:bg-slate-900 rounded-full h-2.5 overflow-hidden">
-                  <div className="bg-gradient-brand h-2.5 rounded-full" style={{ width: `${nextMilestone.progress}%` }} />
+                <div className="w-full bg-[#0B1220] rounded-full h-2.5 overflow-hidden border border-[#1E2A44]">
+                  <div className="bg-gradient-to-r from-[#4285F4] to-[#34A853] h-2.5 rounded-full" style={{ width: `${nextMilestone.progress}%` }} />
                 </div>
 
-                <div className="space-y-1 pt-1 text-[10px] font-semibold text-slate-450 leading-normal">
-                  <p>Remaining points needed: <span className="font-bold text-slate-800 dark:text-slate-200">{nextMilestone.pointsNeeded} pts</span></p>
-                  <p>Complete either <span className="font-bold text-slate-800 dark:text-slate-200">{nextMilestone.labsNeeded} Quests</span> OR <span className="font-bold text-slate-800 dark:text-slate-200">{nextMilestone.badgesNeeded} Skill Badges</span>.</p>
+                <div className="space-y-1 pt-1 text-[10px] font-semibold text-[#94A3B8] leading-normal">
+                  <p>Remaining points needed: <span className="font-bold text-[#E6EAF2]">{nextMilestone.pointsNeeded} pts</span></p>
+                  <p>Complete either <span className="font-bold text-[#E6EAF2]">{nextMilestone.labsNeeded} Quests</span> OR <span className="font-bold text-[#E6EAF2]">{nextMilestone.badgesNeeded} Skill Badges</span>.</p>
                 </div>
               </div>
             ) : (
-              <div className="pt-4 border-t border-slate-200/50 dark:border-slate-850 text-center py-4">
-                <Award className="w-10 h-10 text-amber-500 mx-auto mb-2" />
-                <p className="font-extrabold text-slate-800 dark:text-white text-xs">Champion Status Unlocked!</p>
-                <p className="text-[9px] text-slate-450 mt-1 font-semibold">You have simulated coordinates beyond all default milestones.</p>
+              <div className="pt-4 border-t border-[#1E2A44] text-center py-4">
+                <Award className="w-10 h-10 text-[#FBBC04] mx-auto mb-2" />
+                <p className="font-extrabold text-[#E6EAF2] text-xs">Champion Status Unlocked!</p>
+                <p className="text-[9px] text-[#94A3B8] mt-1 font-semibold">You have simulated coordinates beyond all default milestones.</p>
               </div>
             )}
           </div>
 
           {/* Estimate Card */}
-          <div className="glass-card p-6 hover-lift space-y-4">
-            <h3 className="text-xs font-extrabold text-slate-855 dark:text-white uppercase tracking-wider">Completion Forecasts</h3>
+          <div className="app-card p-6 space-y-4">
+            <h3 className="text-xs font-extrabold text-[#E6EAF2] uppercase tracking-wider">Completion Forecasts</h3>
             
             <div className="space-y-3 font-semibold text-xs">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-indigo-500/5 text-indigo-500 rounded-lg">
+                <div className="p-2 bg-[#4285F4]/10 text-[#4285F4] border border-[#4285F4]/20 rounded-lg">
                   <Flame className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="text-[9px] text-slate-400 block uppercase tracking-wider">Weekly Velocity</span>
-                  <span className="font-bold text-slate-800 dark:text-slate-200">2.5 badges / week</span>
+                  <span className="text-[9px] text-[#94A3B8] block uppercase tracking-wider">Weekly Velocity</span>
+                  <span className="font-bold text-[#E6EAF2]">2.5 badges / week</span>
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-purple-500/5 text-purple-500 rounded-lg">
+                <div className="p-2 bg-[#FBBC04]/10 text-[#FBBC04] border border-[#FBBC04]/20 rounded-lg">
                   <Hourglass className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="text-[9px] text-slate-400 block uppercase tracking-wider">Estimated Completion Date</span>
-                  <span className="font-bold text-slate-800 dark:text-slate-200">August 15, 2026</span>
+                  <span className="text-[9px] text-[#94A3B8] block uppercase tracking-wider">Estimated Completion Date</span>
+                  <span className="font-bold text-[#E6EAF2]">August 15, 2026</span>
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-pink-500/5 text-pink-500 rounded-lg">
+                <div className="p-2 bg-[#34A853]/10 text-[#34A853] border border-[#34A853]/20 rounded-lg">
                   <HelpCircle className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="text-[9px] text-slate-400 block uppercase tracking-wider">Pace Assessment</span>
-                  <span className="font-bold text-emerald-500">On Track (Fast Pace)</span>
+                  <span className="text-[9px] text-[#94A3B8] block uppercase tracking-wider">Pace Assessment</span>
+                  <span className="font-bold text-[#34A853]">On Track (Fast Pace)</span>
                 </div>
               </div>
             </div>

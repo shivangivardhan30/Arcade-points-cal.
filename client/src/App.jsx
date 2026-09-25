@@ -1,17 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { ConfigProvider } from './context/ConfigContext';
 import { Navbar } from './components/Navbar';
-import { Sidebar } from './components/Sidebar';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Home } from './pages/Home';
 import { Dashboard } from './pages/Dashboard';
 import { Milestones } from './pages/Milestones';
 import { Leaderboard } from './pages/Leaderboard';
-import { Analytics } from './pages/Analytics';
 import { Resources } from './pages/Resources';
 import { Settings } from './pages/Settings';
 import { AdminPanel } from './pages/AdminPanel';
@@ -22,10 +20,10 @@ const PrivateRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-slate-50 dark:bg-slate-950">
+      <div className="flex h-screen w-screen items-center justify-center bg-[#0B1220]">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-xs font-semibold text-slate-500">Checking authorization sessions...</p>
+          <div className="w-10 h-10 border-4 border-[#4285F4] border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-xs font-semibold text-[#94A3B8]">Checking authorization sessions...</p>
         </div>
       </div>
     );
@@ -40,8 +38,8 @@ const AdminRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-slate-50 dark:bg-slate-950">
-        <div className="w-8 h-8 border-4 border-indigo-550 border-t-transparent rounded-full animate-spin"></div>
+      <div className="flex h-screen w-screen items-center justify-center bg-[#0B1220]">
+        <div className="w-8 h-8 border-4 border-[#4285F4] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -55,8 +53,8 @@ const AuthRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-slate-50 dark:bg-slate-950">
-        <div className="w-8 h-8 border-4 border-indigo-550 border-t-transparent rounded-full animate-spin"></div>
+      <div className="flex h-screen w-screen items-center justify-center bg-[#0B1220]">
+        <div className="w-8 h-8 border-4 border-[#4285F4] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -64,37 +62,30 @@ const AuthRoute = ({ children }) => {
   return !user ? children : <Navigate to="/dashboard" replace />;
 };
 
-// App Layout wrapper containing Navbar & Sidebar
+// App Layout wrapper containing ONE sticky Navbar & single main container
 const DashboardLayout = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
-      <Navbar onMenuClick={() => setSidebarOpen(prev => !prev)} />
+    <div className="flex min-h-screen flex-col bg-[#0B1220] text-[#E6EAF2] transition-colors duration-300 font-sans">
+      <Navbar />
       
-      <div className="flex flex-1">
-        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-        
-        <main className="flex-1 px-4 sm:px-6 lg:px-8 py-8 max-w-[1600px] overflow-x-hidden">
-          <Routes>
-            {/* Public Pages */}
-            <Route path="" element={<Home />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="milestones" element={<Milestones />} />
-            <Route path="arcade-facilitator" element={<Milestones />} />
-            <Route path="leaderboard" element={<Leaderboard />} />
-            <Route path="resources" element={<Resources />} />
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 flex-1 w-full">
+        <Routes>
+          {/* Public Pages */}
+          <Route path="" element={<Home />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="milestones" element={<Milestones />} />
+          <Route path="arcade-facilitator" element={<Milestones />} />
+          <Route path="leaderboard" element={<Leaderboard />} />
+          <Route path="resources" element={<Resources />} />
 
-            {/* Guarded Pages */}
-            <Route path="analytics" element={<PrivateRoute><Analytics /></PrivateRoute>} />
-            <Route path="settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
-            <Route path="admin" element={<PrivateRoute><AdminRoute><AdminPanel /></AdminRoute></PrivateRoute>} />
-            
-            {/* Fallback */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </main>
-      </div>
+          {/* Guarded Pages */}
+          <Route path="settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
+          <Route path="admin" element={<PrivateRoute><AdminRoute><AdminPanel /></AdminRoute></PrivateRoute>} />
+          
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
     </div>
   );
 };
@@ -107,7 +98,7 @@ export const AppContent = () => {
         path="/login"
         element={
           <AuthRoute>
-            <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
+            <div className="min-h-screen flex items-center justify-center bg-[#0B1220] transition-colors duration-300">
               <Login />
             </div>
           </AuthRoute>
@@ -117,7 +108,7 @@ export const AppContent = () => {
         path="/register"
         element={
           <AuthRoute>
-            <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
+            <div className="min-h-screen flex items-center justify-center bg-[#0B1220] transition-colors duration-300">
               <Register />
             </div>
           </AuthRoute>

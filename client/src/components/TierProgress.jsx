@@ -21,17 +21,17 @@ export const TierProgress = ({ metrics }) => {
   ];
 
   return (
-    <div className="glass-card p-6 border border-[#123a63] bg-[#07111f]/90 rounded-3xl space-y-6 hover-lift glow-card">
+    <div className="app-card p-6 space-y-6 border-t-2 border-t-[#FBBC04]">
       
       {/* Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-[#123a63]/50">
+      <div className="flex items-center justify-between pb-3 border-b border-[#1E2A44]">
         <div className="flex items-center gap-2">
-          <Trophy className="w-5 h-5 text-amber-400" />
-          <h3 className="text-sm font-extrabold uppercase tracking-wider text-white">
+          <Trophy className="w-5 h-5 text-[#FBBC04]" />
+          <h3 className="text-sm font-extrabold uppercase tracking-wider text-[#E6EAF2]">
             Arcade Tier Progression
           </h3>
         </div>
-        <span className="text-[10px] font-extrabold uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20 px-3 py-1 rounded-full">
+        <span className="text-[10px] font-extrabold uppercase tracking-wider bg-[#4285F4]/10 text-[#4285F4] border border-[#4285F4]/20 px-3 py-1 rounded-full">
           {currentTier.name} Standing
         </span>
       </div>
@@ -40,42 +40,42 @@ export const TierProgress = ({ metrics }) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         
         {/* CURRENT TIER */}
-        <div className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/30 space-y-1">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-blue-400 block">
+        <div className="p-4 rounded-xl bg-[#4285F4]/10 border border-[#4285F4]/30 space-y-1">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#4285F4] block">
             CURRENT TIER
           </span>
-          <h4 className="text-lg font-black text-white">
+          <h4 className="text-lg font-black text-[#E6EAF2]">
             {currentTier.name}
           </h4>
-          <p className="text-xs font-bold text-blue-300">
+          <p className="text-xs font-bold text-[#4285F4]">
             {totalPoints} Points Total
           </p>
         </div>
 
         {/* NEXT TIER */}
         {nextTier ? (
-          <div className="p-4 rounded-2xl bg-[#0b1f33] border border-[#123a63] space-y-1">
-            <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block">
+          <div className="p-4 rounded-xl bg-[#0B1220] border border-[#1E2A44] space-y-1">
+            <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#94A3B8] block">
               NEXT TIER
             </span>
-            <h4 className="text-lg font-black text-slate-200">
+            <h4 className="text-lg font-black text-[#E6EAF2]">
               {nextTier.name}
             </h4>
-            <p className="text-xs font-bold text-slate-400">
+            <p className="text-xs font-bold text-[#94A3B8]">
               {nextTier.minPoints} Points Required
             </p>
           </div>
         ) : (
-          <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 space-y-1 flex items-center justify-between">
+          <div className="p-4 rounded-xl bg-[#34A853]/10 border border-[#34A853]/20 space-y-1 flex items-center justify-between">
             <div>
-              <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 block">
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#34A853] block">
                 MAXIMUM TIER
               </span>
-              <h4 className="text-base font-black text-white">
+              <h4 className="text-base font-black text-[#E6EAF2]">
                 Legend Standing
               </h4>
             </div>
-            <Sparkles className="w-6 h-6 text-emerald-400" />
+            <Sparkles className="w-6 h-6 text-[#34A853]" />
           </div>
         )}
 
@@ -84,24 +84,24 @@ export const TierProgress = ({ metrics }) => {
       {/* Animated Progress Bar */}
       <div className="space-y-2">
         <div className="flex justify-between items-center text-xs font-bold">
-          <span className="text-slate-400">
+          <span className="text-[#94A3B8]">
             {nextTier ? `${totalPoints} / ${nextTier.minPoints} Points` : `${totalPoints} Points`}
           </span>
-          <span className="text-blue-400 font-black">
+          <span className="text-[#4285F4] font-black">
             {progressPercent}%
           </span>
         </div>
 
-        <div className="w-full bg-[#0b1f33] rounded-full h-3.5 overflow-hidden border border-[#123a63] p-0.5">
+        <div className="w-full bg-[#0B1220] rounded-full h-3.5 overflow-hidden border border-[#1E2A44] p-0.5">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${progressPercent}%` }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="bg-gradient-to-r from-blue-600 to-emerald-400 h-full rounded-full"
+            className="bg-gradient-to-r from-[#4285F4] to-[#34A853] h-full rounded-full"
           />
         </div>
 
-        <p className="text-xs font-bold text-slate-300 text-center pt-1">
+        <p className="text-xs font-bold text-[#94A3B8] text-center pt-1">
           {nextTier
             ? `${pointsNeeded} points needed for ${nextTier.name}`
             : 'Congratulations! You have reached Legend standing!'}
@@ -109,8 +109,8 @@ export const TierProgress = ({ metrics }) => {
       </div>
 
       {/* Tier Milestone Checklist */}
-      <div className="pt-2 border-t border-[#123a63]/50">
-        <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-3">
+      <div className="pt-2 border-t border-[#1E2A44]">
+        <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#94A3B8] block mb-3">
           Tier Roadmap
         </span>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
@@ -123,19 +123,19 @@ export const TierProgress = ({ metrics }) => {
                 key={idx}
                 className={`p-3 rounded-xl border flex flex-col items-center gap-1 transition-colors ${
                   isCurrent
-                    ? 'bg-blue-500/20 border-blue-500/50 text-white shadow-lg'
+                    ? 'bg-[#4285F4]/20 border-[#4285F4]/50 text-[#E6EAF2] shadow-lg'
                     : isReached
-                    ? 'bg-emerald-500/10 border-emerald-500/20 text-slate-200'
-                    : 'bg-[#0b1f33]/40 border-[#123a63] text-slate-500'
+                    ? 'bg-[#34A853]/10 border-[#34A853]/20 text-[#E6EAF2]'
+                    : 'bg-[#0B1220] border-[#1E2A44] text-[#94A3B8]'
                 }`}
               >
                 {isReached ? (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <CheckCircle2 className="w-4 h-4 text-[#34A853]" />
                 ) : (
-                  <Circle className="w-4 h-4 text-slate-600" />
+                  <Circle className="w-4 h-4 text-[#94A3B8]" />
                 )}
                 <span className="font-extrabold text-xs">{t.name}</span>
-                <span className="text-[10px] font-mono text-slate-400">{t.minPoints} Pts</span>
+                <span className="text-[10px] font-mono text-[#94A3B8]">{t.minPoints} Pts</span>
               </div>
             );
           })}

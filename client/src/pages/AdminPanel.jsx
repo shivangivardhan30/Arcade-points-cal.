@@ -296,12 +296,12 @@ export const AdminPanel = () => {
 
       {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="p-3 bg-google-red/10 dark:bg-google-red/20 text-google-red rounded-2xl">
+        <div className="p-3 bg-[#EA4335]/10 text-[#EA4335] border border-[#EA4335]/20 rounded-2xl">
           <ShieldAlert className="w-6 h-6" />
         </div>
         <div>
-          <h1 className="text-xl font-bold text-slate-800 dark:text-white">Admin Management Center</h1>
-          <p className="text-xs text-slate-505 dark:text-slate-400">
+          <h1 className="text-xl font-bold text-[#E6EAF2]">Admin Management Center</h1>
+          <p className="text-xs text-[#94A3B8]">
             Platform parameters control desk, community logs, and links resources catalog CRUD.
           </p>
         </div>
@@ -310,17 +310,17 @@ export const AdminPanel = () => {
       <div className="grid gap-6 lg:grid-cols-4 items-start">
         
         {/* Navigation Sidebar tabs */}
-        <div className="space-y-1 bg-white/60 dark:bg-slate-900/60 p-3 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 backdrop-blur-md">
+        <div className="space-y-1 bg-[#111A2E] p-3 rounded-xl border border-[#1E2A44]">
           {menuTabs.map((tab) => {
             const { Icon } = tab;
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-xs font-bold transition-all duration-300 ${
+                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-xs font-bold transition-all ${
                   activeTab === tab.id
-                    ? 'bg-google-blue text-white shadow-sm'
-                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60'
+                    ? 'bg-[#4285F4] text-white shadow'
+                    : 'text-[#94A3B8] hover:bg-[#0B1220] hover:text-[#E6EAF2]'
                 }`}
               >
                 <Icon className="w-4 h-4 shrink-0" />
@@ -349,50 +349,50 @@ export const AdminPanel = () => {
                 >
                   {/* Grid summary */}
                   <div className="grid gap-4 sm:grid-cols-3">
-                    <div className="glass-card p-5 flex items-center justify-between">
+                    <div className="app-card p-5 flex items-center justify-between">
                       <div>
-                        <span className="text-[9px] text-slate-400 font-bold uppercase">Total Users</span>
-                        <h3 className="text-xl font-extrabold mt-1 text-slate-800 dark:text-white">{stats?.totalUsers}</h3>
+                        <span className="text-[9px] text-[#94A3B8] font-bold uppercase">Total Users</span>
+                        <h3 className="text-xl font-extrabold mt-1 text-[#E6EAF2]">{stats?.totalUsers}</h3>
                       </div>
-                      <div className="p-2.5 bg-google-blue/10 text-google-blue rounded-lg"><Users className="w-4 h-4" /></div>
+                      <div className="p-2.5 bg-[#4285F4]/10 text-[#4285F4] rounded-lg"><Users className="w-4 h-4" /></div>
                     </div>
-                    <div className="glass-card p-5 flex items-center justify-between">
+                    <div className="app-card p-5 flex items-center justify-between">
                       <div>
-                        <span className="text-[9px] text-slate-400 font-bold uppercase">Total Evaluations</span>
-                        <h3 className="text-xl font-extrabold mt-1 text-slate-800 dark:text-white">{stats?.totalCalculations}</h3>
+                        <span className="text-[9px] text-[#94A3B8] font-bold uppercase">Total Evaluations</span>
+                        <h3 className="text-xl font-extrabold mt-1 text-[#E6EAF2]">{stats?.totalCalculations}</h3>
                       </div>
-                      <div className="p-2.5 bg-google-green/10 text-google-green rounded-lg"><Activity className="w-4 h-4" /></div>
+                      <div className="p-2.5 bg-[#34A853]/10 text-[#34A853] rounded-lg"><Activity className="w-4 h-4" /></div>
                     </div>
-                    <div className="glass-card p-5 flex items-center justify-between">
+                    <div className="app-card p-5 flex items-center justify-between">
                       <div>
-                        <span className="text-[9px] text-slate-400 font-bold uppercase">Average Score</span>
-                        <h3 className="text-xl font-extrabold mt-1 text-slate-800 dark:text-white">{stats?.averagePoints} pts</h3>
+                        <span className="text-[9px] text-[#94A3B8] font-bold uppercase">Average Score</span>
+                        <h3 className="text-xl font-extrabold mt-1 text-[#E6EAF2]">{stats?.averagePoints} pts</h3>
                       </div>
-                      <div className="p-2.5 bg-google-yellow/10 text-google-yellow rounded-lg"><CheckCircle2 className="w-4 h-4" /></div>
+                      <div className="p-2.5 bg-[#FBBC04]/10 text-[#FBBC04] rounded-lg"><CheckCircle2 className="w-4 h-4" /></div>
                     </div>
                   </div>
 
                   {/* System growth Line Chart */}
-                  <div className="glass-card p-6">
-                    <h2 className="text-xs font-bold text-slate-800 dark:text-white mb-4">Calculations Traffic (Evaluations count by dates)</h2>
+                  <div className="app-card p-6">
+                    <h2 className="text-xs font-bold text-[#E6EAF2] mb-4">Calculations Traffic (Evaluations count by dates)</h2>
                     <div className="h-56">
                       {aggregatedLogs.length > 0 ? (
                         <ResponsiveContainer width="100%" height="100%">
                           <AreaChart data={aggregatedLogs} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                             <defs>
                               <linearGradient id="adminChartGrad" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#EA4335" stopOpacity={0.2}/>
-                                <stop offset="95%" stopColor="#EA4335" stopOpacity={0}/>
+                                <stop offset="5%" stopColor="#4285F4" stopOpacity={0.2}/>
+                                <stop offset="95%" stopColor="#4285F4" stopOpacity={0}/>
                               </linearGradient>
                             </defs>
-                            <XAxis dataKey="date" tick={{ fill: '#94a3b8', fontSize: 10 }} axisLine={false} tickLine={false} />
-                            <YAxis tick={{ fill: '#94a3b8', fontSize: 10 }} axisLine={false} tickLine={false} />
+                            <XAxis dataKey="date" tick={{ fill: '#94A3B8', fontSize: 10 }} axisLine={false} tickLine={false} />
+                            <YAxis tick={{ fill: '#94A3B8', fontSize: 10 }} axisLine={false} tickLine={false} />
                             <Tooltip />
-                            <Area type="monotone" dataKey="Evaluations" stroke="#EA4335" strokeWidth={2} fillOpacity={1} fill="url(#adminChartGrad)" />
+                            <Area type="monotone" dataKey="Evaluations" stroke="#4285F4" strokeWidth={2} fillOpacity={1} fill="url(#adminChartGrad)" />
                           </AreaChart>
                         </ResponsiveContainer>
                       ) : (
-                        <p className="text-center text-slate-400 text-xs py-8">No evaluations logged yet.</p>
+                        <p className="text-center text-[#94A3B8] text-xs py-8">No evaluations logged yet.</p>
                       )}
                     </div>
                   </div>
@@ -407,54 +407,54 @@ export const AdminPanel = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="glass-card p-6"
+                  className="app-card p-6"
                 >
-                  <h2 className="text-xs font-bold text-slate-805 dark:text-white mb-4 pb-3 border-b border-slate-150 dark:border-slate-800">
+                  <h2 className="text-xs font-bold text-[#E6EAF2] mb-4 pb-3 border-b border-[#1E2A44]">
                     Point multipliers and Milestones targets settings
                   </h2>
 
-                  <form onSubmit={handleConfigSubmit} className="space-y-4 text-xs font-bold text-slate-600 dark:text-slate-350">
+                  <form onSubmit={handleConfigSubmit} className="space-y-4 text-xs font-bold text-[#94A3B8]">
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div className="space-y-1">
-                        <label className="pl-0.5">Points Per Lab</label>
+                        <label className="pl-0.5 text-[#E6EAF2]">Points Per Lab</label>
                         <input
                           type="number"
                           min="0"
                           value={labsVal}
                           onChange={(e) => setLabsVal(Math.max(0, parseInt(e.target.value) || 0))}
-                          className="google-input text-xs"
+                          className="w-full px-3 py-2 bg-[#0B1220] border border-[#1E2A44] rounded-xl text-xs font-bold text-[#E6EAF2] outline-none focus:border-[#4285F4]"
                           required
                         />
                       </div>
                       <div className="space-y-1">
-                        <label className="pl-0.5">Points Per Skill Badge</label>
+                        <label className="pl-0.5 text-[#E6EAF2]">Points Per Skill Badge</label>
                         <input
                           type="number"
                           min="0"
                           value={badgesVal}
                           onChange={(e) => setBadgesVal(Math.max(0, parseInt(e.target.value) || 0))}
-                          className="google-input text-xs"
+                          className="w-full px-3 py-2 bg-[#0B1220] border border-[#1E2A44] rounded-xl text-xs font-bold text-[#E6EAF2] outline-none focus:border-[#4285F4]"
                           required
                         />
                       </div>
                     </div>
 
-                    <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-800">
-                      <span className="text-[10px] uppercase font-bold text-slate-400">Milestone thresholds (Arcade tiers)</span>
+                    <div className="space-y-3 pt-4 border-t border-[#1E2A44]">
+                      <span className="text-[10px] uppercase font-bold text-[#94A3B8]">Milestone thresholds (Arcade tiers)</span>
                       
                       <div className="space-y-3 mt-2">
                         {milestones.map((m, idx) => (
-                          <div key={idx} className="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl">
-                            <span className="font-bold text-slate-700 dark:text-slate-200">{m.name}</span>
+                          <div key={idx} className="flex justify-between items-center p-3 bg-[#0B1220] border border-[#1E2A44] rounded-xl">
+                            <span className="font-bold text-[#E6EAF2]">{m.name}</span>
                             <div className="flex items-center gap-2">
                               <input
                                 type="number"
                                 min="0"
                                 value={m.pointsRequired}
                                 onChange={(e) => handleMilestoneValueChange(idx, e.target.value)}
-                                className="w-16 py-1.5 text-center bg-white dark:bg-slate-950 font-bold border border-slate-200 dark:border-slate-800 rounded-lg outline-none"
+                                className="w-16 py-1.5 text-center bg-[#111A2E] font-bold border border-[#1E2A44] rounded-lg outline-none text-[#E6EAF2]"
                               />
-                              <span className="text-slate-400">pts</span>
+                              <span className="text-[#94A3B8]">pts</span>
                             </div>
                           </div>
                         ))}
@@ -464,7 +464,7 @@ export const AdminPanel = () => {
                     <button
                       type="submit"
                       disabled={configSaving}
-                      className="w-full flex items-center justify-center gap-2 py-3 mt-4 rounded-xl bg-google-blue hover:bg-blue-600 text-white font-bold transition-all shadow-md"
+                      className="w-full flex items-center justify-center gap-2 py-3 mt-4 rounded-xl bg-[#4285F4] hover:bg-blue-500 text-white font-bold transition-all shadow"
                     >
                       <Save className="w-4 h-4" />
                       Save System Config
@@ -484,8 +484,8 @@ export const AdminPanel = () => {
                   className="grid gap-6 sm:grid-cols-5"
                 >
                   {/* Create Form */}
-                  <div className="sm:col-span-2 glass-card p-6 h-fit">
-                    <h3 className="text-xs font-bold text-slate-800 dark:text-white mb-4">Publish Announcement Alert</h3>
+                  <div className="sm:col-span-2 app-card p-6 h-fit">
+                    <h3 className="text-xs font-bold text-[#E6EAF2] mb-4">Publish Announcement Alert</h3>
                     
                     <form onSubmit={handleAnnSubmit} className="space-y-3 text-xs font-semibold">
                       <input
@@ -493,7 +493,7 @@ export const AdminPanel = () => {
                         placeholder="Notice Title"
                         value={annTitle}
                         onChange={(e) => setAnnTitle(e.target.value)}
-                        className="google-input text-xs"
+                        className="w-full px-3 py-2 bg-[#0B1220] border border-[#1E2A44] rounded-xl text-xs text-[#E6EAF2] placeholder:text-[#94A3B8] outline-none focus:border-[#4285F4]"
                         required
                       />
                       <textarea
@@ -501,23 +501,23 @@ export const AdminPanel = () => {
                         rows="3"
                         value={annContent}
                         onChange={(e) => setAnnContent(e.target.value)}
-                        className="google-input text-xs resize-none"
+                        className="w-full px-3 py-2 bg-[#0B1220] border border-[#1E2A44] rounded-xl text-xs text-[#E6EAF2] placeholder:text-[#94A3B8] outline-none focus:border-[#4285F4] resize-none"
                         required
                       />
                       <div className="flex justify-between items-center">
-                        <label className="flex items-center gap-1.5 text-slate-400 select-none cursor-pointer">
+                        <label className="flex items-center gap-1.5 text-[#94A3B8] select-none cursor-pointer">
                           <input
                             type="checkbox"
                             checked={annActive}
                             onChange={(e) => setAnnActive(e.target.checked)}
-                            className="w-4 h-4 rounded text-google-blue focus:ring-google-blue"
+                            className="w-4 h-4 rounded text-[#4285F4] focus:ring-[#4285F4]"
                           />
                           Active
                         </label>
                         <button
                           type="submit"
                           disabled={annSaving || !annTitle || !annContent}
-                          className="flex items-center gap-1 py-1.5 px-4 bg-google-red text-white text-xs font-bold rounded-xl hover:bg-red-655 transition-all"
+                          className="flex items-center gap-1 py-1.5 px-4 bg-[#EA4335] text-white text-xs font-bold rounded-xl hover:bg-red-600 transition-all"
                         >
                           Publish
                         </button>
@@ -526,25 +526,25 @@ export const AdminPanel = () => {
                   </div>
 
                   {/* List Feed */}
-                  <div className="sm:col-span-3 glass-card p-6 max-h-96 overflow-y-auto space-y-3">
-                    <h3 className="text-xs font-bold text-slate-800 dark:text-white mb-4">Announcements History</h3>
+                  <div className="sm:col-span-3 app-card p-6 max-h-96 overflow-y-auto space-y-3">
+                    <h3 className="text-xs font-bold text-[#E6EAF2] mb-4">Announcements History</h3>
                     
                     {announcements.map((ann) => (
-                      <div key={ann._id} className="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-semibold">
+                      <div key={ann._id} className="flex justify-between items-center p-3 bg-[#0B1220] border border-[#1E2A44] rounded-xl text-xs font-semibold">
                         <div className="max-w-[70%] space-y-0.5">
-                          <h4 className="font-bold text-slate-800 dark:text-slate-200 truncate">{ann.title}</h4>
-                          <p className="text-[9px] text-slate-400">Published {new Date(ann.createdAt).toLocaleDateString()}</p>
+                          <h4 className="font-bold text-[#E6EAF2] truncate">{ann.title}</h4>
+                          <p className="text-[9px] text-[#94A3B8]">Published {new Date(ann.createdAt).toLocaleDateString()}</p>
                         </div>
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => handleAnnToggle(ann._id, ann.active)}
-                            className="text-slate-450 hover:text-slate-700"
+                            className="text-[#94A3B8] hover:text-[#E6EAF2]"
                           >
-                            {ann.active ? <ToggleRight className="w-6 h-6 text-google-green" /> : <ToggleLeft className="w-6 h-6 text-slate-400" />}
+                            {ann.active ? <ToggleRight className="w-6 h-6 text-[#34A853]" /> : <ToggleLeft className="w-6 h-6 text-[#94A3B8]" />}
                           </button>
                           <button
                             onClick={() => handleAnnDelete(ann._id)}
-                            className="p-1 rounded text-slate-450 hover:text-rose-500 hover:bg-rose-50"
+                            className="p-1 rounded text-[#94A3B8] hover:text-[#EA4335] hover:bg-[#EA4335]/10"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -565,8 +565,8 @@ export const AdminPanel = () => {
                   className="grid gap-6 sm:grid-cols-5"
                 >
                   {/* Create Form */}
-                  <div className="sm:col-span-2 glass-card p-6 h-fit">
-                    <h3 className="text-xs font-bold text-slate-800 dark:text-white mb-4">Add Guide/Tutorial resource</h3>
+                  <div className="sm:col-span-2 app-card p-6 h-fit">
+                    <h3 className="text-xs font-bold text-[#E6EAF2] mb-4">Add Guide/Tutorial resource</h3>
                     
                     <form onSubmit={handleResourceSubmit} className="space-y-3 text-xs font-semibold">
                       <input
@@ -574,14 +574,14 @@ export const AdminPanel = () => {
                         placeholder="Resource Title"
                         value={resTitle}
                         onChange={(e) => setResTitle(e.target.value)}
-                        className="google-input text-xs"
+                        className="w-full px-3 py-2 bg-[#0B1220] border border-[#1E2A44] rounded-xl text-xs text-[#E6EAF2] placeholder:text-[#94A3B8] outline-none focus:border-[#4285F4]"
                         required
                       />
                       
                       <select
                         value={resCategory}
                         onChange={(e) => setResCategory(e.target.value)}
-                        className="google-input text-xs"
+                        className="w-full px-3 py-2 bg-[#0B1220] border border-[#1E2A44] rounded-xl text-xs text-[#E6EAF2] outline-none focus:border-[#4285F4]"
                       >
                         <option value="lab">Hands-on Lab</option>
                         <option value="badge">Skill Badge Guide</option>
@@ -594,7 +594,7 @@ export const AdminPanel = () => {
                         placeholder="URL Link (https://...)"
                         value={resLink}
                         onChange={(e) => setResLink(e.target.value)}
-                        className="google-input text-xs"
+                        className="w-full px-3 py-2 bg-[#0B1220] border border-[#1E2A44] rounded-xl text-xs text-[#E6EAF2] placeholder:text-[#94A3B8] outline-none focus:border-[#4285F4]"
                         required
                       />
 
@@ -603,7 +603,7 @@ export const AdminPanel = () => {
                         rows="2"
                         value={resDesc}
                         onChange={(e) => setResDesc(e.target.value)}
-                        className="google-input text-xs resize-none"
+                        className="w-full px-3 py-2 bg-[#0B1220] border border-[#1E2A44] rounded-xl text-xs text-[#E6EAF2] placeholder:text-[#94A3B8] outline-none focus:border-[#4285F4] resize-none"
                       />
 
                       <input
@@ -611,13 +611,13 @@ export const AdminPanel = () => {
                         placeholder="Tags (comma-separated: e.g. Quickstart, Security)"
                         value={resTags}
                         onChange={(e) => setResTags(e.target.value)}
-                        className="google-input text-xs"
+                        className="w-full px-3 py-2 bg-[#0B1220] border border-[#1E2A44] rounded-xl text-xs text-[#E6EAF2] placeholder:text-[#94A3B8] outline-none focus:border-[#4285F4]"
                       />
 
                       <button
                         type="submit"
                         disabled={resSaving || !resTitle || !resLink}
-                        className="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl bg-google-blue text-white font-bold shadow-md"
+                        className="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl bg-[#4285F4] text-white font-bold shadow"
                       >
                         <Plus className="w-4 h-4" />
                         Create Resource link
@@ -626,20 +626,20 @@ export const AdminPanel = () => {
                   </div>
 
                   {/* List View */}
-                  <div className="sm:col-span-3 glass-card p-6 max-h-96 overflow-y-auto space-y-3">
-                    <h3 className="text-xs font-bold text-slate-800 dark:text-white mb-4">Resources Catalog</h3>
+                  <div className="sm:col-span-3 app-card p-6 max-h-96 overflow-y-auto space-y-3">
+                    <h3 className="text-xs font-bold text-[#E6EAF2] mb-4">Resources Catalog</h3>
                     
                     {resources.map((res) => (
-                      <div key={res._id} className="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-semibold">
+                      <div key={res._id} className="flex justify-between items-center p-3 bg-[#0B1220] border border-[#1E2A44] rounded-xl text-xs font-semibold">
                         <div className="max-w-[75%] space-y-0.5">
-                          <h4 className="font-bold text-slate-800 dark:text-slate-200 truncate">{res.title}</h4>
-                          <span className="text-[8px] bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-1.5 py-0.5 rounded uppercase font-bold">
+                          <h4 className="font-bold text-[#E6EAF2] truncate">{res.title}</h4>
+                          <span className="text-[8px] bg-[#111A2E] text-[#94A3B8] px-1.5 py-0.5 rounded uppercase font-bold border border-[#1E2A44]">
                             {res.category}
                           </span>
                         </div>
                         <button
                           onClick={() => handleResourceDelete(res._id)}
-                          className="p-2 rounded-lg text-slate-450 hover:text-rose-505 hover:bg-rose-50 dark:hover:bg-rose-950/20"
+                          className="p-2 rounded-lg text-[#94A3B8] hover:text-[#EA4335] hover:bg-[#EA4335]/10"
                           title="Delete Catalog Item"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -657,44 +657,44 @@ export const AdminPanel = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="glass-card p-6"
+                  className="app-card p-6"
                 >
-                  <h2 className="text-xs font-bold text-slate-805 dark:text-white mb-4 pb-3 border-b border-slate-150 dark:border-slate-800">
+                  <h2 className="text-xs font-bold text-[#E6EAF2] mb-4 pb-3 border-b border-[#1E2A44]">
                     Platform User Logs ({users.length})
                   </h2>
 
                   <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse text-xs">
                       <thead>
-                        <tr className="bg-slate-50/50 dark:bg-slate-900/50 text-slate-500 border-b border-slate-200 dark:border-slate-800 text-[10px] uppercase font-bold">
+                        <tr className="bg-[#0B1220] text-[#94A3B8] border-b border-[#1E2A44] text-[10px] uppercase font-bold">
                           <th className="py-3 px-4">Name</th>
                           <th className="py-3 px-4">Email</th>
                           <th className="py-3 px-4">Role</th>
                           <th className="py-3 px-4 text-right">Action</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-semibold text-slate-700 dark:text-slate-350">
+                      <tbody className="divide-y divide-[#1E2A44] font-semibold text-[#E6EAF2]">
                         {users.map((u) => (
-                          <tr key={u._id} className="hover:bg-slate-50/30 dark:hover:bg-slate-900/20">
+                          <tr key={u._id} className="hover:bg-[#0B1220]/50 transition-colors">
                             <td className="py-3 px-4 flex items-center gap-1.5">
                               {u.role === 'admin' ? (
-                                <div className="p-1 bg-google-red/10 text-google-red rounded-md"><ShieldAlert className="w-3 h-3" /></div>
+                                <div className="p-1 bg-[#EA4335]/10 text-[#EA4335] rounded-md"><ShieldAlert className="w-3 h-3" /></div>
                               ) : (
-                                <div className="p-1 bg-google-blue/10 text-google-blue rounded-md"><UserCheck className="w-3 h-3" /></div>
+                                <div className="p-1 bg-[#4285F4]/10 text-[#4285F4] rounded-md"><UserCheck className="w-3 h-3" /></div>
                               )}
                               {u.name}
                             </td>
-                            <td className="py-3 px-4 font-medium text-slate-500">{u.email}</td>
+                            <td className="py-3 px-4 font-medium text-[#94A3B8]">{u.email}</td>
                             <td className="py-3 px-4">
                               <span className={`inline-block px-2 py-0.5 rounded text-[8px] font-bold uppercase ${
-                                u.role === 'admin' ? 'bg-rose-50 text-rose-700 dark:bg-rose-950/20' : 'bg-blue-50 text-blue-700 dark:bg-blue-950/20'
+                                u.role === 'admin' ? 'bg-[#EA4335]/10 text-[#EA4335]' : 'bg-[#4285F4]/10 text-[#4285F4]'
                               }`}>{u.role}</span>
                             </td>
                             <td className="py-3 px-4 text-right">
                               <button
                                 onClick={() => handleUserDelete(u._id)}
                                 disabled={u._id === loggedInUser?._id}
-                                className="p-1 text-slate-400 hover:text-rose-500 disabled:opacity-30"
+                                className="p-1 text-[#94A3B8] hover:text-[#EA4335] disabled:opacity-30"
                               >
                                 <Trash2 className="w-4 h-4" />
                               </button>

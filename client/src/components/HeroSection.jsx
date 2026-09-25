@@ -1,6 +1,5 @@
 import React from 'react';
 import { ExternalLink, RefreshCw, RotateCcw, Trophy } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 export const HeroSection = ({ metrics, onCalculateAgain, onReset }) => {
   if (!metrics) return null;
@@ -18,16 +17,13 @@ export const HeroSection = ({ metrics, onCalculateAgain, onReset }) => {
   } = metrics;
 
   return (
-    <div className="glass-card p-6 sm:p-8 border border-[#123a63] bg-gradient-to-b from-[#07111f] to-[#050b14] rounded-3xl space-y-6 hover-lift glow-card relative overflow-hidden shadow-2xl">
+    <div className="app-card p-6 sm:p-8 space-y-6">
       
       {/* Top Header Tag */}
-      <div className="flex items-center justify-between border-b border-[#123a63]/50 pb-4">
+      <div className="flex items-center justify-between border-b border-[#1E2A44] pb-4">
         <div className="flex items-center gap-2">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-          </span>
-          <span className="text-xs font-black uppercase tracking-wider text-blue-400">
+          <span className="w-2 h-2 rounded-full bg-[#4285F4]" />
+          <span className="text-xs font-bold uppercase tracking-wider text-[#4285F4]">
             YOUR ARCADE JOURNEY
           </span>
         </div>
@@ -38,26 +34,26 @@ export const HeroSection = ({ metrics, onCalculateAgain, onReset }) => {
               href={profileUrl}
               target="_blank"
               rel="noreferrer"
-              className="text-xs font-bold text-slate-300 hover:text-blue-400 transition-colors inline-flex items-center gap-1"
+              className="text-xs font-medium text-[#94A3B8] hover:text-[#4285F4] transition-colors inline-flex items-center gap-1"
             >
-              <ExternalLink className="w-3.5 h-3.5 text-blue-400" />
+              <ExternalLink className="w-3.5 h-3.5 text-[#4285F4]" />
               <span className="hidden sm:inline">View Public Profile</span>
             </a>
           )}
           <button
             onClick={onCalculateAgain}
-            className="p-2.5 rounded-xl bg-[#0b1f33] hover:bg-[#123a63] border border-[#123a63] text-slate-200 text-xs font-bold transition-colors flex items-center gap-1.5"
+            className="p-2 rounded-xl bg-[#0B1220] hover:bg-[#1E2A44] border border-[#1E2A44] text-[#E6EAF2] text-xs font-medium transition-colors flex items-center gap-1.5"
             title="Calculate Again"
           >
-            <RefreshCw className="w-3.5 h-3.5 text-blue-400" />
+            <RefreshCw className="w-3.5 h-3.5 text-[#4285F4]" />
             <span className="hidden sm:inline">Calculate Again</span>
           </button>
           <button
             onClick={onReset}
-            className="p-2.5 rounded-xl bg-[#0b1f33] hover:bg-[#123a63] border border-[#123a63] text-slate-200 text-xs font-bold transition-colors flex items-center gap-1.5"
+            className="p-2 rounded-xl bg-[#0B1220] hover:bg-[#1E2A44] border border-[#1E2A44] text-[#E6EAF2] text-xs font-medium transition-colors flex items-center gap-1.5"
             title="Reset"
           >
-            <RotateCcw className="w-3.5 h-3.5 text-slate-400" />
+            <RotateCcw className="w-3.5 h-3.5 text-[#94A3B8]" />
             <span className="hidden sm:inline">Reset</span>
           </button>
         </div>
@@ -72,19 +68,19 @@ export const HeroSection = ({ metrics, onCalculateAgain, onReset }) => {
             <img
               src={avatar}
               alt={profileName}
-              className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover ring-4 ring-blue-500/20 border border-[#123a63] shrink-0 shadow-lg"
+              className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover ring-2 ring-[#4285F4]/30 border border-[#1E2A44] shrink-0"
             />
           ) : (
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-900 text-white font-black text-2xl flex items-center justify-center shrink-0 border border-blue-500/30">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#4285F4] text-white font-bold text-2xl flex items-center justify-center shrink-0">
               {profileName.charAt(0)}
             </div>
           )}
 
           <div className="space-y-1">
-            <h2 className="text-xl sm:text-2xl font-black text-white font-heading">
+            <h2 className="text-xl sm:text-2xl font-bold text-[#E6EAF2]">
               {profileName}
             </h2>
-            <p className="text-xs text-slate-400 font-semibold">
+            <p className="text-xs text-[#94A3B8]">
               Google Cloud Skills Boost • {memberSince}
             </p>
           </div>
@@ -93,54 +89,51 @@ export const HeroSection = ({ metrics, onCalculateAgain, onReset }) => {
         {/* Center/Right: Points & Tier */}
         <div className="flex items-center gap-6 text-center md:text-right">
           
-          {/* Big Score Glass Card */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-[#0b1f33]/90 border border-[#123a63] space-y-0.5 shadow-inner min-w-[130px]">
-            <motion.div
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              className="text-4xl sm:text-5xl font-black text-blue-400 font-heading tracking-tight"
-            >
+          {/* Big Score Card */}
+          <div className="p-4 sm:p-5 rounded-xl bg-[#0B1220] border border-[#1E2A44] space-y-0.5 min-w-[130px]">
+            <div className="text-4xl sm:text-5xl font-extrabold text-[#4285F4] tracking-tight">
               {totalPoints}
-            </motion.div>
-            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 block">
+            </div>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-[#94A3B8] block">
               POINTS
             </span>
           </div>
 
           {/* Current Tier Badge */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-blue-500/10 border border-blue-500/30 text-center min-w-[120px]">
-            <Trophy className="w-6 h-6 text-amber-400 mx-auto mb-1" />
-            <span className="text-xs font-black uppercase tracking-wider text-blue-300 block font-heading">
+          <div className="p-4 sm:p-5 rounded-xl bg-[#FBBC04]/10 border border-[#FBBC04]/30 text-center min-w-[120px]">
+            <Trophy className="w-6 h-6 text-[#FBBC04] mx-auto mb-1" />
+            <span className="text-xs font-bold uppercase tracking-wider text-[#FBBC04] block">
               {currentTier.name}
             </span>
-            <span className="text-[10px] text-slate-400 font-bold block mt-0.5">Current Tier</span>
+            <span className="text-[10px] text-[#94A3B8] font-medium block mt-0.5">Current Tier</span>
           </div>
 
         </div>
 
       </div>
 
-      {/* Dynamic Progress Bar */}
+      {/* Dynamic Progress Bar: blue-to-green gradient */}
       <div className="space-y-2 pt-2">
-        <div className="flex justify-between items-center text-xs font-bold">
-          <span className="text-slate-400">
+        <div className="flex justify-between items-center text-xs font-semibold">
+          <span className="text-[#94A3B8]">
             {nextTier ? `${totalPoints} / ${nextTier.minPoints} Points` : `${totalPoints} Points`}
           </span>
-          <span className="text-blue-400 font-black">
+          <span className="text-[#34A853] font-bold">
             {progressPercent}%
           </span>
         </div>
 
-        <div className="w-full bg-[#0b1f33] rounded-full h-3.5 overflow-hidden border border-[#123a63]">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${progressPercent}%` }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="bg-gradient-to-r from-blue-600 via-blue-500 to-emerald-400 h-full rounded-full shadow-lg shadow-blue-500/30"
+        <div className="w-full bg-[#0B1220] rounded-full h-3 overflow-hidden border border-[#1E2A44] p-0.5">
+          <div
+            style={{
+              width: `${progressPercent}%`,
+              background: 'linear-gradient(to right, #4285F4, #34A853)'
+            }}
+            className="h-full rounded-full transition-all duration-500"
           />
         </div>
 
-        <p className="text-xs font-bold text-slate-300 text-center pt-1">
+        <p className="text-xs font-medium text-[#94A3B8] text-center pt-1">
           {nextTier
             ? `${pointsNeeded} points needed for ${nextTier.name}`
             : 'Congratulations! You have reached Legend standing!'}
